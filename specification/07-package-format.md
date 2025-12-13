@@ -1,53 +1,64 @@
 # UAPF Package Format (.uapf) — Normative
 
-## Container
+## Container format
 A `.uapf` file MUST be a **ZIP archive**.
 
 - File extension: `.uapf`
-- Compression: standard ZIP (deflate is acceptable)
-- The ZIP MUST preserve relative paths and file names.
+- Compression: ZIP (deflate or stored)
+- No encryption at the container level
 
-## Root directory rule
-A `.uapf` archive MUST contain **exactly one** root package directory OR place package files at the ZIP root.
+## Root layout
+A `.uapf` archive MUST contain exactly one package.
 
-Allowed:
-- `my-package/uapf.yaml` (single top folder)
-- `uapf.yaml` at archive root
+Allowed layouts:
+- files at ZIP root
+- a single top-level directory containing the package
 
-Not allowed:
-- multiple sibling package roots in one `.uapf`
+Disallowed:
+- multiple sibling package roots
 
-## Required files and folders
-A UAPF package MUST include:
+## Mandatory files
+Every `.uapf` package MUST include:
 
-- `uapf.yaml` (manifest) — REQUIRED
-- `metadata/ownership.yaml` — REQUIRED
-- `metadata/lifecycle.yaml` — REQUIRED
+- `uapf.yaml`
+- `metadata/ownership.yaml`
+- `metadata/lifecycle.yaml`
 
-For **Level 4** packages, it MUST include:
-- `bpmn/` with at least one `.bpmn.xml` file — REQUIRED
-- `resources/` with `mappings.yaml` — REQUIRED
+## Level-specific requirements
 
-For higher-level packages (Levels 1–3), BPMN/DMN/CMMN folders MAY be absent if the package is purely compositional and declares that in the manifest.
+### Level 4 (atomic executable)
+A Level-4 package MUST include:
+- `bpmn/` with ≥1 `.bpmn.xml`
+- `resources/mappings.yaml`
 
-## File naming conventions
-- BPMN files SHOULD use: `*.bpmn.xml`
-- DMN files SHOULD use: `*.dmn.xml`
-- CMMN files SHOULD use: `*.cmmn.xml`
+### Levels 1–3 (compositional)
+Levels 1–3 MAY omit BPMN/DMN/CMMN folders if:
+- the package is compositional only
+- this is declared via `includes` in the manifest
 
-## Manifest schema
-The `uapf.yaml` manifest MUST validate against:
-- `schemas/uapf-manifest.schema.json`
+### Level 0
+Level 0 is NOT a `.uapf` package.
+It is represented only by an enterprise index in a workspace.
 
-Resource mappings MUST validate against:
-- `schemas/resource-mapping.schema.json`
+## File naming
+Recommended (not required):
+- `*.bpmn.xml`
+- `*.dmn.xml`
+- `*.cmmn.xml`
 
-Enterprise indexes MUST validate against:
-- `schemas/enterprise-index.schema.json`
+## Manifest
+The manifest file `uapf.yaml` MUST:
+- validate against `schemas/uapf-manifest.schema.json`
+- declare the package level
+- declare cornerstone presence
 
-## Integrity and traceability (optional, recommended)
+## Integrity (optional)
 A package MAY include:
-- `metadata/integrity.yaml` containing checksums (sha256) for included artifacts.
-- `metadata/signature.*` for digital signing.
+- `metadata/integrity.yaml` with checksums
+- digital signature files
 
-If present, integrity documents MUST NOT contradict the actual package contents.
+Integrity metadata MUST NOT contradict actual package contents.
+
+## Determinism
+Packaging tools SHOULD produce deterministic archives.
+If timestamps or ordering vary, implementations MUST rely on content validation, not binary equality.
