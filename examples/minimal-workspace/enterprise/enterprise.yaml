@@ -1,0 +1,11 @@
+kind: uapf.enterprise.index
+level: 0
+enterprise:
+  id: example.enterprise
+  name: Example Enterprise
+  description: Minimal enterprise index referencing one Level-4 process.
+packages:
+  - ref: ../processes/L4-minimal
+    level: 4
+    domain: example
+    tags: [minimal, demo]

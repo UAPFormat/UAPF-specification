@@ -1,0 +1,7 @@
+kind: uapf.resources.agents
+agents:
+  - id: agent.robert-cane
+    name: Robert Cane
+    type: ai_agent
+    capabilities:
+      - capability.general.assistance

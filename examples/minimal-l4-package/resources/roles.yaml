@@ -1,0 +1,5 @@
+kind: uapf.resources.roles
+roles:
+  - id: role.operator
+    name: Operator
+    description: Executes or supervises the task.

@@ -1,0 +1,7 @@
+kind: uapf.metadata.ownership
+owner:
+  type: team
+  id: process-office
+approvers:
+  - type: role
+    id: role.process-owner

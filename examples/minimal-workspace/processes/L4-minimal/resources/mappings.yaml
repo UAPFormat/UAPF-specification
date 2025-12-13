@@ -1,0 +1,15 @@
+kind: uapf.resources.mapping
+targets:
+  - id: agent.robert-cane
+    type: ai_agent
+    name: Robert Cane
+    capabilities:
+      - capability.general.assistance
+
+bindings:
+  - source:
+      type: bpmn.task
+      ref: Task_1
+    targetId: agent.robert-cane
+    mode: assisted
+    notes: "Agent assists execution of Task_1."
