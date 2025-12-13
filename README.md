@@ -1,4 +1,4 @@
-# UAPF Specification v1 (SSOT)
+# UAPF Specification 
 
 This repository is the **Single Source of Truth (SSOT)** for **UAPF v1**.
 
