@@ -29,6 +29,9 @@ The following are normative and define conformance:
 
 All other content (examples, tools, websites) is informative only.
 
+The formal checklist for verifying UAPF conformance is captured in:
+- [`specification/10-conformance-checklist.md`](10-conformance-checklist.md)
+
 ## Conformance levels
 An implementation MAY claim conformance at one or more levels:
 

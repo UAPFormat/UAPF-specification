@@ -1,4 +1,13 @@
-# UAPF Specification 
+# UAPF Specification
+
+## Normative entry point
+
+This README is **informational**.
+
+The normative entry point for the UAPF v1 standard is:
+- [`specification/00-overview.md`](specification/00-overview.md)
+
+All conformance requirements are defined under `/specification` and `/schemas`.
 
 This repository is the **Single Source of Truth (SSOT)** for **UAPF v1**.
 
@@ -44,6 +53,7 @@ UAPF is a disciplined format for storing and versioning organizational processes
 - Package format (.uapf): [`specification/07-package-format.md`](specification/07-package-format.md)
 - Export/Import/Validation: [`specification/08-export-import-validation.md`](specification/08-export-import-validation.md)
 - MCP export & AI binding: [`specification/06-mcp-integration.md`](specification/06-mcp-integration.md)
+- Conformance checklist: [`specification/10-conformance-checklist.md`](specification/10-conformance-checklist.md)
 
 ## Schemas (normative)
 - UAPF manifest schema: [`schemas/uapf-manifest.schema.json`](schemas/uapf-manifest.schema.json)
