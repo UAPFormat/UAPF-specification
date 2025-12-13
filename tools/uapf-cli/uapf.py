@@ -1,6 +1,4 @@
 import sys, os, zipfile, json
-import yaml
-from jsonschema import validate
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.abspath(os.path.join(ROOT, "..", ".."))
@@ -10,6 +8,8 @@ def load_json(p):
         return json.load(f)
 
 def load_yaml(p):
+    import yaml
+
     with open(p, "r", encoding="utf-8") as f:
         return yaml.safe_load(f)
 
@@ -21,6 +21,8 @@ def schema_paths():
     }
 
 def validate_package(path):
+    from jsonschema import validate
+
     sp = schema_paths()
     m = load_yaml(os.path.join(path, "uapf.yaml"))
     validate(instance=m, schema=load_json(sp["manifest"]))
@@ -40,6 +42,8 @@ def validate_package(path):
         validate(instance=load_yaml(map_path), schema=load_json(sp["mapping"]))
 
 def validate_enterprise_index(path):
+    from jsonschema import validate
+
     sp = schema_paths()
     e = load_yaml(path)
     validate(instance=e, schema=load_json(sp["enterprise"]))
