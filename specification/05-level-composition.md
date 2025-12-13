@@ -38,3 +38,13 @@ graph TD
   L3A --> L4A[Level 4: Atomic Executable Process]
   L3A --> L4B[Level 4: Atomic Executable Process]
 ```
+
+## Non-conformance rules (normative)
+
+The following conditions are NON-CONFORMANT:
+
+- Duplicating BPMN, DMN, or CMMN artifacts across multiple Levels for the same logical process identity.
+- Copying Level-4 executable artifacts into Level 1–3 packages instead of referencing them.
+- Creating multiple divergent definitions of the same process without distinct package identifiers.
+
+A conformant implementation MUST detect and reject such structures when validating a workspace.

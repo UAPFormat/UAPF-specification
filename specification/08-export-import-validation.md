@@ -1,38 +1,47 @@
-# Export, Import, and Validation (Normative)
-
-## Conformance levels
-An implementation MAY claim:
-- **Package conformance**: can validate and read/write `.uapf` packages.
-- **Workspace conformance**: can index and resolve workspace references.
-- **MCP binding conformance**: can produce MCP-compatible bindings from resource mappings.
+# Export, Import, and Validation — Normative
 
 ## Export (workspace → .uapf)
-Export MUST:
-1. Collect `uapf.yaml` and all referenced files/folders for the package scope.
-2. Resolve `includes`:
-   - either embed included packages, OR
-   - preserve references and declare them as external dependencies.
-3. Create a ZIP archive with `.uapf` extension.
-4. Preserve relative paths.
+An export operation MUST:
+
+1. Locate `uapf.yaml`
+2. Validate the manifest schema
+3. Collect all referenced files for the package scope
+4. Resolve `includes` by either:
+   - embedding referenced packages, OR
+   - declaring them as external dependencies
+5. Produce a ZIP archive with `.uapf` extension
+
+Export MUST fail if:
+- required files are missing
+- manifest validation fails
+- includes cannot be resolved
 
 ## Import (.uapf → workspace or runtime)
-Import MUST:
-1. Unzip and locate `uapf.yaml`.
-2. Validate manifest schema and required files for the declared level.
-3. Validate resource mapping schema if present.
-4. Report unresolved `includes` as an error unless external dependency resolution is configured.
+An import operation MUST:
 
-## Validation rules (baseline)
+1. Unpack the archive
+2. Locate `uapf.yaml`
+3. Validate required files for the declared level
+4. Validate schemas
+5. Report unresolved dependencies
+
+Import MUST fail if:
+- `uapf.yaml` is missing
+- schemas fail validation
+- Level 4 requirements are not met
+
+## Validation rules
+
 A conformant validator MUST:
-- validate `uapf.yaml` against `schemas/uapf-manifest.schema.json`
-- validate `enterprise.yaml` against `schemas/enterprise-index.schema.json` (Level 0)
-- validate `resources/mappings.yaml` against `schemas/resource-mapping.schema.json` when present
+- validate manifests against JSON Schema
+- validate enterprise indexes at Level 0
+- validate resource mappings when present
 
-A validator SHOULD also:
-- check that Level 4 has `/bpmn` and at least one `.bpmn.xml`
-- check that mappings reference existing BPMN/DMN/CMMN element identifiers (best-effort)
-- check that includes paths are resolvable in a workspace context
+A validator SHOULD:
+- verify BPMN/DMN/CMMN file presence
+- warn on unresolved element references
+- warn on unused resource targets
 
-## BPMN/DMN/CMMN semantic validation (optional)
-UAPF packaging validation is distinct from BPMN/DMN/CMMN engine validation.
-Implementations MAY integrate engine validators (e.g., Camunda/Zeebe tooling) but UAPF does not require a specific engine.
+## Error severity
+- **ERROR**: non-conformant, processing MUST stop
+- **WARNING**: valid but potentially incomplete
