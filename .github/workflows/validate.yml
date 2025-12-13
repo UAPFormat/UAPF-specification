@@ -46,3 +46,8 @@ jobs:
 
           print("OK: schemas validated for minimal examples.")
           PY
+
+      - name: Validate using reference CLI
+        run: |
+          python tools/uapf-cli/uapf.py validate examples/approve-expense-l4
+          python tools/uapf-cli/uapf.py validate examples/minimal-workspace/enterprise/enterprise.yaml

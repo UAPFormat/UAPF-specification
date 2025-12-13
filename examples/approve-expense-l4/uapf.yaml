@@ -1,0 +1,23 @@
+kind: uapf.package
+id: uapf.proc.expense.approval.l4
+name: Approve Expense (Level 4)
+description: A concrete Level-4 process example with BPMN + DMN and resource mappings.
+level: 4
+version: 1.0.0
+includes: []
+cornerstones:
+  bpmn: true
+  dmn: true
+  cmmn: false
+  resources: true
+paths:
+  bpmn: bpmn
+  dmn: dmn
+  cmmn: cmmn
+  resources: resources
+  metadata: metadata
+owners:
+  - type: team
+    id: finance-process-office
+    contact: finance-process-office@example.com
+lifecycle: approved

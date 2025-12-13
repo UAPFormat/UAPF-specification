@@ -41,6 +41,8 @@ UAPF is a disciplined format for storing and versioning organizational processes
 - Packages & workspaces: [`specification/03-packages-and-workspaces.md`](specification/03-packages-and-workspaces.md)
 - Folder structure: [`specification/04-folder-structure.md`](specification/04-folder-structure.md)
 - Level composition: [`specification/05-level-composition.md`](specification/05-level-composition.md)
+- Package format (.uapf): [`specification/07-package-format.md`](specification/07-package-format.md)
+- Export/Import/Validation: [`specification/08-export-import-validation.md`](specification/08-export-import-validation.md)
 - MCP export & AI binding: [`specification/06-mcp-integration.md`](specification/06-mcp-integration.md)
 
 ## Schemas (normative)
