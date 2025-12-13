@@ -3,9 +3,13 @@ level: 0
 enterprise:
   id: example.enterprise
   name: Example Enterprise
-  description: Minimal enterprise index referencing one Level-4 process.
+  description: Enterprise index referencing concrete UAPF packages.
 packages:
-  - ref: ../processes/L4-minimal
+  - ref: ../approve-expense-l4
     level: 4
-    domain: example
-    tags: [minimal, demo]
+    domain: finance
+    tags: [example, expense]
+  - ref: ../composed-l3
+    level: 3
+    domain: finance
+    tags: [example, composition]

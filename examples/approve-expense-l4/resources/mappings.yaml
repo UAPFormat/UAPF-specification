@@ -1,0 +1,41 @@
+kind: uapf.resources.mapping
+targets:
+  - id: agent.finance-assistant
+    type: ai_agent
+    name: Finance Assistant Agent
+    capabilities:
+      - capability.policy.lookup
+      - capability.decision.assist
+
+  - id: role.manager
+    type: human_role
+    name: Manager
+
+bindings:
+  - source:
+      type: bpmn.task
+      ref: Task_CheckPolicy
+    targetId: agent.finance-assistant
+    mode: assisted
+    notes: "Agent assists with policy evaluation and DMN interpretation."
+
+  - source:
+      type: bpmn.task
+      ref: Task_Approve
+    targetId: role.manager
+    mode: manual
+    notes: "Manager performs the approval action."
+
+  - source:
+      type: bpmn.task
+      ref: Task_Reject
+    targetId: role.manager
+    mode: manual
+    notes: "Manager performs the rejection action."
+
+  - source:
+      type: dmn.decision
+      ref: Decision_ApprovalPolicy
+    targetId: agent.finance-assistant
+    mode: assisted
+    notes: "Agent assists evaluation of the approval policy decision."

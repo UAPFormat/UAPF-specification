@@ -1,0 +1,8 @@
+kind: uapf.resources.roles
+roles:
+  - id: role.employee
+    name: Employee
+    description: Submits the expense.
+  - id: role.manager
+    name: Manager
+    description: Approves or rejects the expense.

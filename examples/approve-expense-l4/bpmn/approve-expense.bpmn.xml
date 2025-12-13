@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+  id="Defs_ApproveExpense"
+  targetNamespace="https://uapf.dev/examples/approve-expense">
+  <bpmn:process id="Process_ApproveExpense" isExecutable="true">
+    <bpmn:startEvent id="Start" name="Submit Expense"/>
+    <bpmn:task id="Task_CheckPolicy" name="Check Approval Policy"/>
+    <bpmn:exclusiveGateway id="Gateway_Approved" name="Approved?"/>
+    <bpmn:task id="Task_Approve" name="Approve Expense"/>
+    <bpmn:task id="Task_Reject" name="Reject Expense"/>
+    <bpmn:endEvent id="End" name="Done"/>
+
+    <bpmn:sequenceFlow id="F1" sourceRef="Start" targetRef="Task_CheckPolicy"/>
+    <bpmn:sequenceFlow id="F2" sourceRef="Task_CheckPolicy" targetRef="Gateway_Approved"/>
+    <bpmn:sequenceFlow id="F3" sourceRef="Gateway_Approved" targetRef="Task_Approve"/>
+    <bpmn:sequenceFlow id="F4" sourceRef="Gateway_Approved" targetRef="Task_Reject"/>
+    <bpmn:sequenceFlow id="F5" sourceRef="Task_Approve" targetRef="End"/>
+    <bpmn:sequenceFlow id="F6" sourceRef="Task_Reject" targetRef="End"/>
+  </bpmn:process>
+</bpmn:definitions>

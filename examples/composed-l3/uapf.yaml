@@ -1,0 +1,18 @@
+kind: uapf.package
+id: uapf.proc.expense.workflow.l3
+name: Expense Workflow (Level 3)
+description: Level-3 composed workflow referencing multiple Level-4 packages.
+level: 3
+version: 1.0.0
+includes:
+  - ../approve-expense-l4
+cornerstones:
+  bpmn: false
+  dmn: false
+  cmmn: false
+  resources: false
+owners:
+  - type: team
+    id: finance-process-office
+    contact: finance-process-office@example.com
+lifecycle: approved

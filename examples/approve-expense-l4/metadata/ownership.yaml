@@ -1,0 +1,7 @@
+kind: uapf.metadata.ownership
+owner:
+  type: team
+  id: finance-process-office
+approvers:
+  - type: role
+    id: role.finance-process-owner

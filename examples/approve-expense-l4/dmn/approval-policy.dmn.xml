@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dmn:definitions xmlns:dmn="https://www.omg.org/spec/DMN/20191111/MODEL/"
+  id="Defs_ApprovalPolicy"
+  name="ApprovalPolicy"
+  namespace="https://uapf.dev/examples/approve-expense">
+  <dmn:decision id="Decision_ApprovalPolicy" name="Approval Policy">
+    <dmn:description>Decide whether an expense requires manager approval.</dmn:description>
+  </dmn:decision>
+</dmn:definitions>
