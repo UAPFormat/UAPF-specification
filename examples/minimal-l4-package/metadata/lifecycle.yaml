@@ -1,0 +1,4 @@
+kind: uapf.metadata.lifecycle
+state: approved
+lastReviewed: "2025-12-13"
+reviewCycleDays: 180

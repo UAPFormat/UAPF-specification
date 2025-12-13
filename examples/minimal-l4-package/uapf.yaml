@@ -1,0 +1,23 @@
+kind: uapf.package
+id: uapf.proc.minimal.l4
+name: Minimal Level-4 Process
+description: Minimal valid Level-4 UAPF package example.
+level: 4
+version: 1.0.0
+includes: []
+cornerstones:
+  bpmn: true
+  dmn: false
+  cmmn: false
+  resources: true
+paths:
+  bpmn: bpmn
+  dmn: dmn
+  cmmn: cmmn
+  resources: resources
+  metadata: metadata
+owners:
+  - type: team
+    id: process-office
+    contact: process-office@example.com
+lifecycle: approved
