@@ -48,6 +48,19 @@ UAPF is a disciplined format for storing and versioning organizational processes
 - Enterprise index schema: [`schemas/enterprise-index.schema.json`](schemas/enterprise-index.schema.json)
 - Resource mapping schema: [`schemas/resource-mapping.schema.json`](schemas/resource-mapping.schema.json)
 
+## Normative boundaries
+Only the following are normative SSOT for UAPF v1:
+- [`/specification`](specification/)
+- [`/schemas`](schemas/)
+
+Examples are reference only and must validate against schemas.
+
+## Quick validation (CI parity)
+The repository validates examples against schemas via GitHub Actions.
+To run locally (optional):
+- Install: `pip install pyyaml jsonschema`
+- Validate: run the script embedded in `.github/workflows/validate.yml`
+
 ## Examples
 - Minimal Level-4 package: [`examples/minimal-l4-package`](examples/minimal-l4-package)
 

@@ -41,7 +41,7 @@
           "required": ["type", "ref"],
           "properties": {
             "type": { "type": "string", "enum": ["bpmn.task", "dmn.decision", "cmmn.task"] },
-            "ref": { "type": "string", "minLength": 1, "description": "Engine-specific element reference (e.g., BPMN task id)." }
+            "ref": { "type": "string", "minLength": 1 }
           }
         },
         "targetId": { "type": "string", "minLength": 1 },

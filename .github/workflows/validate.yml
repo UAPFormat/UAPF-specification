@@ -1,4 +1,4 @@
-name: Validate UAPF repo structure
+name: Validate UAPF SSOT
 
 on:
   push:
@@ -15,14 +15,13 @@ jobs:
           python -m pip install --upgrade pip
           pip install pyyaml jsonschema
 
-      - name: Validate example manifests (basic presence checks)
+      - name: Validate examples against schemas
         run: |
           python - << 'PY'
-          import os, sys, yaml, json
+          import yaml, json
           from jsonschema import validate
 
           def load_json(path):
-            import json
             with open(path, "r", encoding="utf-8") as f:
               return json.load(f)
 
@@ -32,12 +31,16 @@ jobs:
 
           manifest_schema = load_json("schemas/uapf-manifest.schema.json")
           enterprise_schema = load_json("schemas/enterprise-index.schema.json")
+          mapping_schema = load_json("schemas/resource-mapping.schema.json")
 
-          # Validate minimal L4 package manifest (YAML object against JSON schema)
+          # Minimal L4 package
           m = load_yaml("examples/minimal-l4-package/uapf.yaml")
           validate(instance=m, schema=manifest_schema)
 
-          # Validate enterprise index
+          rmap = load_yaml("examples/minimal-l4-package/resources/mappings.yaml")
+          validate(instance=rmap, schema=mapping_schema)
+
+          # Minimal workspace enterprise index
           e = load_yaml("examples/minimal-workspace/enterprise/enterprise.yaml")
           validate(instance=e, schema=enterprise_schema)
 
