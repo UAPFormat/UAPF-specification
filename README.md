@@ -65,6 +65,7 @@ To run locally (optional):
 
 ## Examples
 - Minimal Level-4 package: [`examples/minimal-l4-package`](examples/minimal-l4-package)
+- Packed `.uapf` archives: [`examples/archives`](examples/archives)
 
 ## Non-goals
 - This repository does **not** provide a BPMN/DMN/CMMN editor.

@@ -51,3 +51,21 @@ jobs:
         run: |
           python tools/uapf-cli/uapf.py validate examples/approve-expense-l4
           python tools/uapf-cli/uapf.py validate examples/minimal-workspace/enterprise/enterprise.yaml
+
+      - name: Re-pack and verify committed archive content matches source (hash list)
+        run: |
+          if [ -f examples/archives/approve-expense-l4.uapf ]; then
+            python tools/uapf-cli/uapf.py pack examples/approve-expense-l4 /tmp/approve-expense-l4.uapf
+
+            mkdir -p /tmp/uapf_a /tmp/uapf_b
+            python tools/uapf-cli/uapf.py unpack /tmp/approve-expense-l4.uapf /tmp/uapf_a
+            python tools/uapf-cli/uapf.py unpack examples/archives/approve-expense-l4.uapf /tmp/uapf_b
+
+            # Compare file trees and contents
+            (cd /tmp/uapf_a && find . -type f -print0 | sort -z | xargs -0 sha256sum) > /tmp/a.sha
+            (cd /tmp/uapf_b && find . -type f -print0 | sort -z | xargs -0 sha256sum) > /tmp/b.sha
+            diff -u /tmp/a.sha /tmp/b.sha
+            echo "OK: committed archive content matches source"
+          else
+            echo "Archive examples/archives/approve-expense-l4.uapf not present; skipping reproducibility check."
+          fi
