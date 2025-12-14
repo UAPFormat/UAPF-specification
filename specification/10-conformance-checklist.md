@@ -23,6 +23,28 @@ An implementation claiming UAPF conformance MUST satisfy the following.
 - [ ] Rejects invalid or incomplete packages
 - [ ] Reports unresolved dependencies
 
+## MCP Export and Agentic Integrations (06)
+
+- [ ] The implementation supports **Package → MCP** (import any valid `.uapf` and expose MCP surface).
+- [ ] The implementation supports **Workspace → MCP** (map a Workspace repo to an MCP surface reflecting SSOT).
+- [ ] The MCP surface exposes required tools:
+  - [ ] `uapf.describe`
+  - [ ] `uapf.list`
+  - [ ] `uapf.run_process`
+  - [ ] `uapf.evaluate_decision`
+  - [ ] `uapf.resolve_resources`
+  - [ ] `uapf.get_artifact`
+  - [ ] `uapf.validate` (MUST in Workspace mode; RECOMMENDED in Package mode)
+- [ ] The MCP surface exposes required resource categories:
+  - [ ] `uapf://manifest/...`
+  - [ ] `uapf://bpmn/...`
+  - [ ] `uapf://dmn/...`
+  - [ ] `uapf://cmmn/...`
+  - [ ] `uapf://policies/...` (if policies exist)
+  - [ ] `uapf://bindings/...`
+- [ ] Resource binding is first-class: the implementation returns explicit resolved bindings or explicit “unbound” results (no invented bindings).
+- [ ] Level-handling: Level 1–3 packages that are not runnable fail clearly unless a runnable entrypoint is resolved.
+
 ## Governance
 - [ ] Reads ownership metadata
 - [ ] Reads lifecycle metadata
