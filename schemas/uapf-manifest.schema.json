@@ -38,6 +38,38 @@
         "metadata": { "type": "string", "default": "metadata" }
       }
     },
+    "exposure": {
+      "type": "object",
+      "description": "Declarative exposure rules for external bindings such as MCP",
+      "properties": {
+        "mcp": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": true
+            },
+            "runnable": {
+              "type": "boolean",
+              "description": "Whether this package exposes runnable entrypoints via MCP"
+            },
+            "exposedEntrypoints": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Explicit list of process/decision IDs allowed to be exposed"
+            },
+            "exposedArtifacts": {
+              "type": "array",
+              "items": {
+                "enum": ["manifest", "bpmn", "dmn", "cmmn", "docs", "tests"]
+              }
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
     "owners": { "type": "array", "items": { "$ref": "#/$defs/owner" }, "minItems": 1 },
     "lifecycle": { "type": "string", "enum": ["draft", "review", "approved", "deprecated"] }
   },

@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uapf.dev/schemas/policies.schema.json",
+  "title": "UAPF Policies Schema",
+  "description": "Declarative policy declarations for UAPF artifacts. Claims are declarative. Enforcement is implementation-specific.",
+  "type": "object",
+  "properties": {
+    "requiredClaims": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Claims required to execute or bind this package/process"
+    }
+  }
+}

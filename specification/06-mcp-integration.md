@@ -108,6 +108,15 @@ A conforming implementation MUST expose resources equivalent to:
 
 Resource URI structure MAY vary by implementation, but the categories above MUST be available and addressable.
 
+## 6.3.3 Schema conformance
+
+Any MCP export MUST expose only data that conforms to:
+- manifest.schema.json
+- resource-binding.schema.json
+- policies.schema.json
+
+If data cannot be resolved, implementations MUST return explicit `unbound` or `blocked` states.
+
 ## 6.4 Level handling rules in MCP export
 
 UAPF Levels describe scope, not execution semantics.
@@ -184,3 +193,14 @@ The following repositories may provide reference implementations:
 - `uapf-mcp` (MCP adapter plane)
 
 Any behavior differences MUST be resolved in favor of this SSOT repository.
+
+## 6.9 Non-normative implementation layers
+
+The following are explicitly OUTSIDE SSOT scope:
+- MCP server lifecycle
+- Transport (stdio / HTTP / OAuth)
+- DID method selection
+- VC formats
+- Agent runtime behavior
+
+These belong in satellite repositories and MUST conform to this specification.
