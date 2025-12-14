@@ -32,6 +32,22 @@ All other content (examples, tools, websites) is informative only.
 The formal checklist for verifying UAPF conformance is captured in:
 - [`specification/10-conformance-checklist.md`](10-conformance-checklist.md)
 
+## Chapter list
+
+The core chapters of the specification are:
+
+1. [`00-ssot.md`](00-ssot.md) — SSOT rules
+2. [`01-concepts.md`](01-concepts.md) — core concepts
+3. [`02-process-cornerstones.md`](02-process-cornerstones.md) — BPMN/DMN/CMMN cornerstones
+4. [`03-packages-and-workspaces.md`](03-packages-and-workspaces.md) — artifact types
+5. [`04-folder-structure.md`](04-folder-structure.md) — repository layout
+6. [`05-level-composition.md`](05-level-composition.md) — levels and composition
+7. [`06-mcp-integration.md`](06-mcp-integration.md) — MCP export and agentic integrations
+8. [`07-package-format.md`](07-package-format.md) — package container format
+9. [`08-export-import-validation.md`](08-export-import-validation.md) — export/import rules
+10. [`10-conformance-checklist.md`](10-conformance-checklist.md) — conformance checklist
+11. [`99-versioning-and-evolution.md`](99-versioning-and-evolution.md) — versioning rules
+
 ## Conformance levels
 An implementation MAY claim conformance at one or more levels:
 
