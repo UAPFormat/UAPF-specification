@@ -16,6 +16,20 @@
       "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$"
     },
     "includes": { "type": "array", "items": { "$ref": "#/$defs/packageRef" }, "default": [] },
+    "dependencies": {
+      "type": "object",
+      "description": "External package dependencies with version constraints",
+      "additionalProperties": {
+        "type": "string",
+        "pattern": "^(\\^|~|>=|<=|>|<|=)?[0-9]+(\\.[0-9]+)*(\\.[0-9]+)?(-[a-zA-Z0-9.-]+)?(,\\s*(>=|<=|>|<|=)?[0-9]+(\\.[0-9]+)*(\\.[0-9]+)?(-[a-zA-Z0-9.-]+)?)*$|^latest$"
+      },
+      "examples": [
+        {
+          "org.shared.auth": "^1.0.0",
+          "org.shared.logging": ">=2.0.0,<3.0.0"
+        }
+      ]
+    },
     "cornerstones": {
       "type": "object",
       "additionalProperties": false,

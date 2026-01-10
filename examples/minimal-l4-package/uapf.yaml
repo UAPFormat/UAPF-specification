@@ -3,8 +3,9 @@ id: uapf.proc.minimal.l4
 name: Minimal Level-4 Process
 description: Minimal valid Level-4 UAPF package example.
 level: 4
-version: 1.0.0
+version: "1.0.0"  # QUOTED - prevents YAML float coercion
 includes: []
+dependencies: {}
 cornerstones:
   bpmn: true
   dmn: false
@@ -16,6 +17,12 @@ paths:
   cmmn: cmmn
   resources: resources
   metadata: metadata
+exposure:
+  mcp:
+    enabled: true
+    runnable: true
+    exposedEntrypoints:
+      - "Process_1"
 owners:
   - type: team
     id: process-office
