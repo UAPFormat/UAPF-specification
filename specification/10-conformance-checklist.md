@@ -53,4 +53,22 @@ An implementation claiming UAPF conformance MUST satisfy the following.
 - [ ] Interprets resource mappings
 - [ ] Produces derived agent bindings
 
+## Dependency resolution (09)
+- [ ] Parses all reference formats (relative, package:, version ranges)
+- [ ] Supports semver range constraints (^, ~, >=, <, etc.)
+- [ ] Detects and rejects circular dependencies
+- [ ] Supports lock file reading (RECOMMENDED)
+- [ ] Fails clearly on unresolvable dependencies
+
+## Semantic validation (11)
+- [ ] Validates BPMN element references exist
+- [ ] Validates DMN decision references exist
+- [ ] Validates target IDs exist in targets list
+- [ ] Validates level composition rules
+- [ ] Reports errors with codes from SEM-xxx taxonomy
+
+## YAML safety (12)
+- [ ] Validates version fields are strings, not numbers
+- [ ] Rejects invalid type coercions in required fields
+
 An implementation MUST state which sections it supports.

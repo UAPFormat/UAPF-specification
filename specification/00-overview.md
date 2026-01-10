@@ -45,8 +45,11 @@ The core chapters of the specification are:
 7. [`06-mcp-integration.md`](06-mcp-integration.md) — MCP export and agentic integrations
 8. [`07-package-format.md`](07-package-format.md) — package container format
 9. [`08-export-import-validation.md`](08-export-import-validation.md) — export/import rules
-10. [`10-conformance-checklist.md`](10-conformance-checklist.md) — conformance checklist
-11. [`99-versioning-and-evolution.md`](99-versioning-and-evolution.md) — versioning rules
+10. [`09-dependencies.md`](09-dependencies.md) — dependency resolution
+11. [`10-conformance-checklist.md`](10-conformance-checklist.md) — conformance checklist
+12. [`11-semantic-validation.md`](11-semantic-validation.md) — semantic validation rules
+13. [`12-yaml-guidelines.md`](12-yaml-guidelines.md) — YAML authoring guidelines
+14. [`99-versioning-and-evolution.md`](99-versioning-and-evolution.md) — versioning rules
 
 ## Conformance levels
 An implementation MAY claim conformance at one or more levels:

@@ -1,0 +1,15 @@
+kind: uapf.policies
+classification:
+  level: internal
+  dataCategories:
+    - general-business
+execution:
+  requiresApproval: false
+  auditRequired: true
+  allowedEnvironments:
+    - development
+    - staging
+    - production
+delegation:
+  allowAgentDelegation: true
+  maxDelegationDepth: 3

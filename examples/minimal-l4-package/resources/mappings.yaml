@@ -5,11 +5,34 @@ targets:
     name: Robert Cane
     capabilities:
       - capability.general.assistance
+      - capability.document.review
+    endpoint: "mcp://agents/robert-cane"
+    authentication:
+      method: none
 
 bindings:
   - source:
       type: bpmn.task
-      ref: Task_1
+      ref: "Task_1"
     targetId: agent.robert-cane
     mode: assisted
+    contract:
+      input:
+        - name: taskData
+          type: object
+          required: true
+          description: Input data for the task
+      output:
+        - name: result
+          type: object
+          required: true
+      timeout: "30s"
+      retries:
+        maxAttempts: 3
+        backoffMs: 1000
+    fallback:
+      onTimeout: escalate
+      onError: retry
+    requiredCapabilities:
+      - capability.general.assistance
     notes: "Agent assists execution of Task_1."

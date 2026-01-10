@@ -1,7 +1,19 @@
 kind: uapf.metadata.ownership
-owner:
-  type: team
-  id: process-office
+owners:
+  - type: team
+    id: process-office
+    name: Process Excellence Office
+    contact: process-office@example.com
+    role: owner
+  - type: person
+    id: john.smith
+    name: John Smith
+    contact: john.smith@example.com
+    role: maintainer
 approvers:
-  - type: role
-    id: role.process-owner
+  - process-office
+  - senior-architects
+escalation:
+  primary: process-office
+  secondary: enterprise-architecture
+  sla_hours: 24

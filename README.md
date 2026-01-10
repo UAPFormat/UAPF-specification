@@ -52,13 +52,20 @@ UAPF is a disciplined format for storing and versioning organizational processes
 - Level composition: [`specification/05-level-composition.md`](specification/05-level-composition.md)
 - Package format (.uapf): [`specification/07-package-format.md`](specification/07-package-format.md)
 - Export/Import/Validation: [`specification/08-export-import-validation.md`](specification/08-export-import-validation.md)
+- Dependencies & versioning: [`specification/09-dependencies.md`](specification/09-dependencies.md)
 - MCP export & AI binding: [`specification/06-mcp-integration.md`](specification/06-mcp-integration.md)
 - Conformance checklist: [`specification/10-conformance-checklist.md`](specification/10-conformance-checklist.md)
+- Semantic validation: [`specification/11-semantic-validation.md`](specification/11-semantic-validation.md)
+- YAML guidelines: [`specification/12-yaml-guidelines.md`](specification/12-yaml-guidelines.md)
 
 ## Schemas (normative)
 - UAPF manifest schema: [`schemas/uapf-manifest.schema.json`](schemas/uapf-manifest.schema.json)
 - Enterprise index schema: [`schemas/enterprise-index.schema.json`](schemas/enterprise-index.schema.json)
 - Resource mapping schema: [`schemas/resource-mapping.schema.json`](schemas/resource-mapping.schema.json)
+- Ownership metadata schema: [`schemas/ownership.schema.json`](schemas/ownership.schema.json)
+- Lifecycle metadata schema: [`schemas/lifecycle.schema.json`](schemas/lifecycle.schema.json)
+- Policies schema: [`schemas/policies.schema.json`](schemas/policies.schema.json)
+- MCP tool schemas: [`schemas/mcp-tools.schema.json`](schemas/mcp-tools.schema.json)
 
 ## Normative boundaries
 Only the following are normative SSOT for UAPF v1:
