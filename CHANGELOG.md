@@ -1,5 +1,33 @@
 # Changelog
 
+## [2.0.0] - 2026-05-17
+
+### Changed (BREAKING)
+- Cornerstone file naming: BPMN/DMN/CMMN files MUST now use the OMG-standard
+  extensions `.bpmn`, `.dmn`, `.cmmn` — previously `.bpmn.xml`, `.dmn.xml`,
+  `.cmmn.xml`. (`specification/07-package-format.md`,
+  `specification/11-semantic-validation.md`.)
+
+  Rationale: UAPF does not redefine BPMN/DMN/CMMN — those standards, and
+  their serialization, are owned by OMG. Cornerstone files are now named
+  with the extensions the OMG tool ecosystem recognizes, so a UAPF
+  cornerstone opens unmodified in any conforming OMG modeler or viewer
+  (Camunda Modeler, bpmn-js/dmn-js, IDE plugins). This also removes a prior
+  internal contradiction in 07-package-format.md, where the Level-4 rule
+  required `.bpmn.xml` while the file-naming section called the same
+  convention "recommended (not required)."
+
+### Migration
+- Rename cornerstone files: `*.bpmn.xml` -> `*.bpmn`, `*.dmn.xml` -> `*.dmn`,
+  `*.cmmn.xml` -> `*.cmmn`.
+- Manifests (`uapf.yaml`) reference cornerstone *folders*, not individual
+  files, and therefore do NOT change.
+- The `uapf-manifest` JSON Schema has no filename constraint and does NOT
+  change.
+- Bundled examples (`approve-expense-l4`, `minimal-l4-package`,
+  `minimal-workspace`) have been renamed accordingly.
+
+
 ## [1.1.0] - 2025-01-10
 
 ### Added

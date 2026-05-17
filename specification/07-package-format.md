@@ -28,7 +28,7 @@ Every `.uapf` package MUST include:
 
 ### Level 4 (atomic executable)
 A Level-4 package MUST include:
-- `bpmn/` with ≥1 `.bpmn.xml`
+- `bpmn/` with ≥1 `.bpmn` file
 - `resources/mappings.yaml`
 
 ### Levels 1–3 (compositional)
@@ -41,10 +41,20 @@ Level 0 is NOT a `.uapf` package.
 It is represented only by an enterprise index in a workspace.
 
 ## File naming
-Recommended (not required):
-- `*.bpmn.xml`
-- `*.dmn.xml`
-- `*.cmmn.xml`
+
+Cornerstone files MUST use the file extensions defined by their respective
+OMG standards:
+
+- BPMN files MUST use `.bpmn`
+- DMN files MUST use `.dmn`
+- CMMN files MUST use `.cmmn`
+
+Rationale: UAPF does not redefine BPMN/DMN/CMMN; their semantics and their
+serialization are owned by OMG. UAPF cornerstone files are therefore named
+with the extensions the OMG tool ecosystem recognizes (`.bpmn`, `.dmn`,
+`.cmmn`), so that a UAPF cornerstone opens, unmodified, in any conforming
+OMG modeler or viewer. The files remain XML documents; the extension
+identifies the modeling standard, not the serialization.
 
 ## Manifest
 The manifest file `uapf.yaml` MUST:

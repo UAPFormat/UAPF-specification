@@ -14,7 +14,7 @@ All `source.ref` values in resource mappings MUST reference existing BPMN elemen
 ```
 FOR EACH binding IN mappings.bindings:
   IF binding.source.type STARTS WITH "bpmn.":
-    ASSERT binding.source.ref EXISTS IN bpmn/*.bpmn.xml as element @id
+    ASSERT binding.source.ref EXISTS IN bpmn/*.bpmn as element @id
 ```
 
 ### 11.1.2 DMN Element References
@@ -23,7 +23,7 @@ FOR EACH binding IN mappings.bindings:
 ```
 FOR EACH binding IN mappings.bindings:
   IF binding.source.type == "dmn.decision":
-    ASSERT binding.source.ref EXISTS IN dmn/*.dmn.xml as decision @id
+    ASSERT binding.source.ref EXISTS IN dmn/*.dmn as decision @id
 ```
 
 ### 11.1.3 Target References
@@ -41,7 +41,7 @@ FOR EACH binding IN mappings.bindings:
 **Validation Rule SEM-004:**
 ```
 FOR Level 4 packages:
-  FOR EACH userTask IN bpmn/*.bpmn.xml:
+  FOR EACH userTask IN bpmn/*.bpmn:
     WARN IF userTask.@id NOT IN any binding.source.ref
 ```
 

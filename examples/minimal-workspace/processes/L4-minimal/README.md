@@ -3,7 +3,7 @@
 This folder is a minimal UAPF Level-4 package.
 
 - Manifest: `uapf.yaml`
-- BPMN: `bpmn/process.bpmn.xml`
+- BPMN: `bpmn/process.bpmn`
 - Resources + mapping: `resources/*`
 - Governance metadata: `metadata/*`
 

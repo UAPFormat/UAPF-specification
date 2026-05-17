@@ -1,8 +1,8 @@
 # Approve Expense (Level 4)
 
 Concrete Level-4 example showing:
-- BPMN executable flow (`bpmn/approve-expense.bpmn.xml`)
-- DMN decision placeholder (`dmn/approval-policy.dmn.xml`)
+- BPMN executable flow (`bpmn/approve-expense.bpmn`)
+- DMN decision placeholder (`dmn/approval-policy.dmn`)
 - Resource definitions and task/decision bindings (`resources/mappings.yaml`)
 - Governance metadata (`metadata/*`)
 
