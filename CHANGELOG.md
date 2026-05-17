@@ -1,5 +1,27 @@
 # Changelog
 
+## [2.2.0] - 2026-05-17
+
+### Added
+- Manifest schema (`schemas/uapf-manifest.schema.json`) extended to model the
+  full real-world manifest vocabulary. New optional top-level fields:
+  - `artifacts` — per-cornerstone inventory with `role`/`description` per file
+  - `inputs` / `outputs` — logical process I/O names
+  - `requires_capabilities` — UAPF-IP host capabilities the package requires
+  - `profiles_supported` — UAPF-IP integration profiles supported
+  - `guardrails` — path to the package guardrails file
+- `exposure.mcp.exposedEntrypoints` items may now be either a bare
+  process/decision id (string) or an object `{decision|process, tool}` mapping
+  an entrypoint to an explicit MCP tool name — previously string-only.
+
+### Note
+- Additive, backward-compatible schema change (new optional properties, a
+  widened item type) — hence a minor bump. Manifests valid under 2.1.x stay
+  valid. Prior to 2.2.0 the schema modelled neither the richer
+  `artifacts`/`inputs`/`outputs` form nor the UAPF-IP
+  `requires_capabilities`/`profiles_supported`/`guardrails` fields, even though
+  real packages used them; this release closes that gap.
+
 ## [2.1.0] - 2026-05-17
 
 ### Added

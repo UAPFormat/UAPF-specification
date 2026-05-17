@@ -90,6 +90,12 @@ The manifest file `uapf.yaml` MUST:
 - declare the package level
 - declare cornerstone presence
 
+The manifest MAY additionally declare `artifacts` (a per-cornerstone
+inventory with `role` and `description` metadata), and `inputs` / `outputs`
+(logical names of the process I/O). The `exposure.mcp.exposedEntrypoints` list
+accepts either bare entrypoint ids or `{decision|process, tool}` objects that
+map an entrypoint to an explicit MCP tool name.
+
 ## Integrity (optional)
 A package MAY include:
 - `metadata/integrity.yaml` with checksums
