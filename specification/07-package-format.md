@@ -56,6 +56,34 @@ with the extensions the OMG tool ecosystem recognizes (`.bpmn`, `.dmn`,
 OMG modeler or viewer. The files remain XML documents; the extension
 identifies the modeling standard, not the serialization.
 
+## Diagram interchange
+
+Cornerstone BPMN, DMN and CMMN files MUST include valid OMG diagram
+interchange (DI):
+
+- BPMN files MUST contain a `<bpmndi:BPMNDiagram>` element, with the
+  `bpmndi`, `dc` and `di` namespaces declared.
+- DMN files MUST contain a `<dmndi:DMNDI>` element where the decision
+  model defines a Decision Requirements Diagram (DRD). A DMN file whose
+  only decision logic is one or more decision tables or literal
+  expressions, with no DRD, is exempt.
+- CMMN files MUST contain a `<cmmndi:CMMNDI>` element, with the
+  `cmmndi`, `dc` and `di` namespaces declared.
+
+Rationale: a UAPF cornerstone is the authoritative *and inspectable*
+artifact of a process. Diagram interchange is the standard, modeler-default
+representation of a BPMN/DMN/CMMN model's layout — every conforming OMG
+modeler (Camunda Modeler, bpmn-js/dmn-js/cmmn-js, Eclipse) produces it on
+save. A cornerstone without DI is therefore an artifact that was never
+modeled, only hand-authored as logic; it cannot be opened and reviewed
+visually in any conforming tool. Requiring DI imposes no burden on a normal
+authoring workflow — the modeler already emits it — and guarantees that a
+cornerstone renders identically across the OMG tool ecosystem.
+
+An implementation MUST NOT rely on automatic layout generation as a
+substitute for authored DI: a generated layout is not the authored layout
+and is not deterministic across tools.
+
 ## Manifest
 The manifest file `uapf.yaml` MUST:
 - validate against `schemas/uapf-manifest.schema.json`

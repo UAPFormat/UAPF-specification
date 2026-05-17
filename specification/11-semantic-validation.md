@@ -75,6 +75,22 @@ FOR EACH include IN manifest.includes:
   // Lower levels can only include higher-numbered levels
 ```
 
+### 11.3.3 Diagram Interchange Presence
+
+Cornerstone BPMN/DMN/CMMN files MUST carry valid OMG diagram interchange
+(see 07-package-format, "Diagram interchange").
+
+**Validation Rule SEM-011:**
+```
+FOR EACH file IN bpmn/*.bpmn:
+  ASSERT file CONTAINS <bpmndi:BPMNDiagram>
+FOR EACH file IN cmmn/*.cmmn:
+  ASSERT file CONTAINS <cmmndi:CMMNDI>
+FOR EACH file IN dmn/*.dmn:
+  IF file DEFINES a Decision Requirements Diagram (DRD):
+    ASSERT file CONTAINS <dmndi:DMNDI>
+```
+
 ## 11.4 Error Codes
 
 | Code | Severity | Description |
@@ -89,9 +105,10 @@ FOR EACH include IN manifest.includes:
 | SEM-008 | ERROR | Circular dependency detected |
 | SEM-009 | ERROR | Duplicate binding for same source |
 | SEM-010 | WARNING | Fallback target not defined |
+| SEM-011 | ERROR | Cornerstone file missing diagram interchange (DI) |
 
 ## 11.5 Conformance
 
-- Implementations MUST validate SEM-001 through SEM-003 and SEM-007 through SEM-009
+- Implementations MUST validate SEM-001 through SEM-003, SEM-007 through SEM-009, and SEM-011
 - Implementations SHOULD validate SEM-004 through SEM-006 and SEM-010
 - Implementations MUST report error codes with messages

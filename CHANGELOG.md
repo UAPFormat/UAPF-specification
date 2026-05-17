@@ -1,5 +1,30 @@
 # Changelog
 
+## [2.1.0] - 2026-05-17
+
+### Added
+- Cornerstone diagram interchange is now mandatory. Cornerstone BPMN/DMN/CMMN
+  files MUST include valid OMG diagram interchange (`bpmndi:BPMNDiagram` /
+  `dmndi:DMNDI` / `cmmndi:CMMNDI`). New normative section in
+  `07-package-format.md` ("Diagram interchange") and new validation rule
+  `SEM-011` in `11-semantic-validation.md` (ERROR severity, MUST-validate).
+  DMN files whose decision logic is table/literal-expression only, with no
+  Decision Requirements Diagram, are exempt from the DMN DI requirement.
+
+  Rationale: a cornerstone is the authoritative and *inspectable* artifact of
+  a process. Diagram interchange is the modeler-default representation of
+  layout — every conforming OMG modeler emits it on save — so requiring it
+  imposes no burden on a normal authoring workflow and only rejects
+  hand-authored, logic-only XML that was never modeled. Implementations MUST
+  NOT treat automatic layout generation as a substitute for authored DI.
+
+### Note
+- This is an additive normative requirement (new MUST + new SEM rule), not a
+  change to existing structure — hence a minor bump. Existing packages whose
+  cornerstones were produced by a modeler already comply. Packages with
+  hand-authored, DI-less cornerstones must add diagram interchange.
+
+
 ## [2.0.0] - 2026-05-17
 
 ### Changed (BREAKING)
