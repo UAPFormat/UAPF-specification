@@ -62,7 +62,7 @@
           "additionalProperties": false,
           "required": ["type", "ref"],
           "properties": {
-            "type": { "type": "string", "enum": ["bpmn.task", "bpmn.serviceTask", "bpmn.userTask", "bpmn.sendTask", "bpmn.receiveTask", "dmn.decision", "cmmn.task", "cmmn.humanTask", "cmmn.processTask"] },
+            "type": { "type": "string", "enum": ["bpmn.task", "bpmn.serviceTask", "bpmn.userTask", "bpmn.businessRuleTask", "bpmn.sendTask", "bpmn.receiveTask", "dmn.decision", "cmmn.task", "cmmn.humanTask", "cmmn.processTask"] },
             "ref": { "type": "string", "minLength": 1, "description": "Element ID from BPMN/DMN/CMMN" }
           }
         },

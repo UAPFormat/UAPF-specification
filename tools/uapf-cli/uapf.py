@@ -32,9 +32,9 @@ def validate_package(path):
         bpmn_dir = os.path.join(path, m.get("paths", {}).get("bpmn", "bpmn"))
         if not os.path.isdir(bpmn_dir):
             raise SystemExit("ERROR: Level 4 requires /bpmn directory")
-        has_bpmn = any(fn.endswith(".bpmn.xml") for fn in os.listdir(bpmn_dir))
+        has_bpmn = any(fn.endswith((".bpmn", ".bpmn.xml")) for fn in os.listdir(bpmn_dir))
         if not has_bpmn:
-            raise SystemExit("ERROR: Level 4 requires at least one *.bpmn.xml file")
+            raise SystemExit("ERROR: Level 4 requires at least one .bpmn file")
 
         map_path = os.path.join(path, m.get("paths", {}).get("resources", "resources"), "mappings.yaml")
         if not os.path.isfile(map_path):
