@@ -34,3 +34,11 @@ Resources describe who/what executes work and how tasks bind to those resources.
   - MCP tools/endpoints.
 
 UAPF does not redefine BPMN/DMN/CMMN semantics; it packages them with governance and bindings.
+
+### Algorithm Cards (extension)
+
+Resource targets MAY carry deeper governance metadata via Algorithm
+Cards (see chapter 13). Algorithm Cards extend, but do not constitute,
+the Resources cornerstone. The four cornerstones remain BPMN, DMN,
+CMMN, and Resources + Mapping.
+

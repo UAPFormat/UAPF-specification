@@ -1,0 +1,53 @@
+kind: uapf.algorithm.card
+
+id: algo.expense_approval.policy_lookup_assistant
+version: "1.0.0"
+name: "Policy lookup assistant"
+intent: >
+  Assists evaluation of expense-approval policy by retrieving the
+  applicable internal policy text for a given expense category and
+  amount, and presenting it in a structured form for the approver
+  and for the DMN policy decision.
+
+algorithm_kind: extractor
+
+io:
+  inputs:
+    - id: expense_category
+      type: string
+    - id: expense_amount
+      type: decimal
+      unit: EUR
+  outputs:
+    - id: applicable_policy_text
+      type: string
+    - id: policy_section_ref
+      type: string
+
+implementation:
+  type: external
+  medium: vendor_saas
+  uri: "https://example.com/policy-api/v1/lookup"
+  hash: "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+
+determinism: deterministic
+side_effects: external_call
+
+owners:
+  - type: team
+    id: finance-process-office
+    contact: finance-process-office@example.com
+
+lifecycle:
+  status: approved
+  since: "2026-05-20"
+
+validation:
+  last_validated: "2026-05-20"
+  test_suite: ../tests/algorithms/policy_lookup_assistant.test.yaml
+  validator: finance-process-office
+
+audit:
+  log_inputs: redacted
+  log_outputs: full
+  retention: "1y"

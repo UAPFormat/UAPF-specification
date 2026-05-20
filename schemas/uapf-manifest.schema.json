@@ -107,6 +107,10 @@
         "metadata": {
           "type": "string",
           "default": "metadata"
+        },
+        "algorithms": {
+          "type": "string",
+          "default": "algorithms"
         }
       }
     },
@@ -252,6 +256,10 @@
     "guardrails": {
       "type": "string",
       "description": "Path, relative to the package root, to the guardrails file enforced at every capability call (e.g. 'resources/guardrails.yaml')."
+    },
+    "algorithm_cards": {
+      "type": "boolean",
+      "description": "Whether this package contains Algorithm Cards (see chapter 13)."
     }
   },
   "$defs": {
