@@ -68,6 +68,7 @@ UAPF is a disciplined format for storing and versioning organizational processes
 - Policies schema: [`schemas/policies.schema.json`](schemas/policies.schema.json)
 - MCP tool schemas: [`schemas/mcp-tools.schema.json`](schemas/mcp-tools.schema.json)
 - Algorithm Card schema: [`schemas/algorithm-card.schema.json`](schemas/algorithm-card.schema.json)
+- BPMN extension schema: [`schemas/bpmn-extension.schema.json`](schemas/bpmn-extension.schema.json)
 
 ## Normative boundaries
 Only the following are normative SSOT for UAPF v1:

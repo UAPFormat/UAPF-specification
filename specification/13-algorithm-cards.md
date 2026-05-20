@@ -150,30 +150,138 @@ universal core. The following extensions are defined in this version:
 Implementations MUST ignore extensions they do not understand.
 Extensions MUST NOT contradict the universal core.
 
-## 13.8 Relationship to Resource targets
+## 13.8 BPMN integration
 
-A resource target in `resources/mappings.yaml` MAY reference a Card via
-the optional `algorithm_card` property. The reference is the Card's `id`
-or a relative path to the Card file.
+A BPMN task that invokes an algorithm MUST declare it via the
+`uapf:algorithmCardRef` attribute. The attribute value is the Card's
+`id` (matching the pattern `^algo\.[a-z0-9][a-z0-9._-]+$`).
 
-```yaml
-targets:
-  - id: classifier_x
-    type: ai_agent
-    name: "Generic classifier"
-    algorithm_card: algo.example.classifier_x
+The UAPF BPMN namespace URI is `https://uapf.dev/bpmn/v2.4` and MUST
+be bound to some XML namespace prefix on `<bpmn:definitions>`. The
+recommended prefix is `uapf`. When the prefix `uapf` is already bound
+to a different namespace on the same document (e.g., to a legacy
+engine namespace such as `https://uapf.dev/bpmn-ext/v1` used for
+`uapf:capability` / `uapf:decision`), implementations MUST choose a
+different prefix for the v2.4 namespace (e.g., `uapfv24`, `uapfa`).
+Renderers and validators MUST resolve attributes by namespace URI +
+local name, not by literal prefix.
+
+```xml
+<bpmn:definitions
+    xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+    xmlns:uapf="https://uapf.dev/bpmn/v2.4"
+    ...>
+  <bpmn:process id="Process_X">
+    <bpmn:serviceTask id="Task_DetectPii"
+                      name="Detect and redact PII"
+                      uapf:algorithmCardRef="algo.example.pii_redactor">
+      ...
+    </bpmn:serviceTask>
+  </bpmn:process>
+</bpmn:definitions>
 ```
 
-The Card and the target describe complementary facets of the same
-resource: the target describes the *binding surface* (how to reach the
-algorithm), the Card describes the *algorithmic surface* (what the
-algorithm does, with what guarantees).
+`uapf:algorithmCardRef` is valid on `bpmn:serviceTask`,
+`bpmn:businessRuleTask`, and `bpmn:task`. It is NOT valid on user
+tasks (a card describes an algorithm — user tasks invoke humans).
+The attribute is declarative and authoritative: it is the canonical
+statement that "this task invokes algorithm X."
 
-A target MAY reference at most one Card. Multiple targets MAY reference
-the same Card. Implementations MUST resolve Card references during
-validation; unresolved references MUST raise SEM-012.
+A task MAY reference at most one Card. Multiple tasks MAY reference
+the same Card. Implementations MUST resolve every
+`uapf:algorithmCardRef` to a Card in `algorithms/`; unresolved
+references MUST raise SEM-012.
 
-## 13.9 Manifest declaration
+Resource targets in `resources/mappings.yaml` describe *where* a task
+is dispatched (the operational endpoint). They do NOT carry algorithm
+identity. UAPF v2.3.0 placed `algorithm_card` on the resource target;
+v2.4.0 reverses this — see the CHANGELOG for the rationale.
+
+## 13.9 BPMN IO specification from the Card
+
+A task that carries `uapf:algorithmCardRef` SHOULD ALSO carry a
+`<bpmn:ioSpecification>` whose `dataInput` and `dataOutput` entries
+correspond one-to-one with the Card's `io.inputs` and `io.outputs`.
+
+The IO specification serves a single load-bearing purpose: making the
+algorithm's data interface VISIBLE on the rendered diagram, so that
+downstream gateways branching on an output (e.g. a DMN decision
+keyed on `ai_confidence_score`) can be visually traced to the
+algorithm that produces it.
+
+```xml
+<bpmn:serviceTask id="Task_DetectPii"
+                  name="Detect and redact PII"
+                  uapf:algorithmCardRef="algo.example.pii_redactor">
+  <bpmn:ioSpecification>
+    <bpmn:dataInput  id="Task_DetectPii_in_content"
+                     name="content : string"/>
+    <bpmn:dataOutput id="Task_DetectPii_out_redacted_content"
+                     name="redacted_content : string"/>
+    <bpmn:dataOutput id="Task_DetectPii_out_pii_present"
+                     name="personas_koda_present : boolean"/>
+    <bpmn:inputSet>
+      <bpmn:dataInputRefs>Task_DetectPii_in_content</bpmn:dataInputRefs>
+    </bpmn:inputSet>
+    <bpmn:outputSet>
+      <bpmn:dataOutputRefs>Task_DetectPii_out_redacted_content</bpmn:dataOutputRefs>
+      <bpmn:dataOutputRefs>Task_DetectPii_out_pii_present</bpmn:dataOutputRefs>
+    </bpmn:outputSet>
+  </bpmn:ioSpecification>
+</bpmn:serviceTask>
+```
+
+The Card's `io` block is the source of truth. The BPMN
+`<bpmn:ioSpecification>` is a denormalisation for rendering and MAY
+be synthesized by tooling at build time or rewrite time.
+Implementations MUST detect mismatches and raise SEM-013 (advisory
+error — auto-fixable by regeneration from the Card).
+
+`dataInput.name` and `dataOutput.name` use the convention
+`"{io_field.id} : {io_field.type}"` so renderers can show both the
+name and the type in a single label.
+
+## 13.10 Visual rendering (informative)
+
+This subsection is INFORMATIVE — it does not mandate renderer
+behaviour, but defines the recommended visual contract so multiple
+implementations stay consistent.
+
+Renderers that understand `uapf:algorithmCardRef` SHOULD draw a
+serviceTask that carries it with the following visual elements,
+overlaid on the standard BPMN serviceTask rectangle:
+
+1. **Algorithm icon** in the top-left corner, replacing the default
+   `serviceTask` gear marker. The recommended icon is a small stack
+   of three offset rounded rectangles ("cards") with the letter
+   `ƒ` centred in the top card — the metaphor is "algorithm card."
+2. **Card identity line** rendered below the task's display name:
+   the Card's `id` in a muted secondary color.
+3. **Metadata line** rendered below the card identity: the Card's
+   `version`, `algorithm_kind`, and `determinism` joined by a
+   middle-dot separator.
+4. **Risk-class dot** in the top-right corner, colored:
+   * green for `risk.aiActRiskClass: minimal` or
+     `determinism: deterministic` with no risk extension,
+   * amber for `risk.aiActRiskClass: limited` or
+     `determinism: stochastic`,
+   * red for `risk.aiActRiskClass: high` or any card with
+     `risk.humanOversight: mandatory`.
+5. **Data objects** from the synthesized `<bpmn:ioSpecification>` —
+   renderers SHOULD let bpmn-js (or equivalent) draw the inputs on
+   the left of the task and the outputs on the right, so the data
+   flow into downstream gateways is visible.
+
+Click-through on the task body SHOULD open a panel showing the full
+Card YAML.
+
+Renderers that do NOT understand the UAPF extension MUST still
+render the underlying `serviceTask` correctly — the extension
+attribute is namespaced and ignored by conformant BPMN tooling.
+
+## 13.11 Manifest declaration
+
+(unchanged from prior text — kept here for reading flow.)
 
 A package containing Algorithm Cards SHOULD declare:
 
@@ -183,39 +291,25 @@ paths:
   algorithms: algorithms
 ```
 
-`algorithm_cards` is a manifest-level boolean declaring intent.
-`paths.algorithms` declares the folder name if not the default. Both
-fields are OPTIONAL and live at manifest top level — not inside the
-closed `cornerstones` block.
-
-## 13.10 Testing
+## 13.12 Testing
 
 Per-Card tests SHOULD be stored under
 `tests/algorithms/<card-id>.test.yaml`.
 
 Tests carry a uniform shape regardless of Card `algorithm_kind` or
 `implementation.type`: input cases, expected outputs, and a tolerance
-declaration. Deterministic algorithms use exact-match tolerance;
-stochastic algorithms use distributional tolerance with explicit
-pass-rate thresholds.
+declaration. A passing test run is the operational definition of
+validation.
 
-A passing test run is the operational definition of validation. CI
-SHOULD update `validation.last_validated` on the Card when the test
-suite passes against the current `implementation.hash` (for external)
-or `body_ref` content hash (for inline).
-
-The detailed test format is non-normative and lives in implementation
-guides.
-
-## 13.11 Cards in MCP export
+## 13.13 Cards in MCP export
 
 When a package is exported to MCP per chapter 06, Cards MUST be
-exposable as resources under `uapf://algorithms/...` and queryable via
-`uapf.list` and `uapf.get_artifact`.
+exposable as resources under `uapf://algorithms/...` and queryable
+via `uapf.list` and `uapf.get_artifact`.
 
-The `uapf.resolve_resources` tool MUST include the Card reference in
-the resolved binding when a target's `algorithm_card` is present.
+The `uapf.resolve_resources` tool MUST include the Card reference
+in the resolved binding when a target's task carries one.
 
-## 13.12 Conformance
+## 13.14 Conformance
 
 See chapter 10 for the Algorithm Cards conformance section.

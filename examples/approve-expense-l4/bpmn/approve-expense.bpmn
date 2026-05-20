@@ -1,11 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bpmn:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+  xmlns:uapf="https://uapf.dev/bpmn/v2.4"
   id="Defs_ApproveExpense"
   targetNamespace="https://uapf.dev/examples/approve-expense">
   <bpmn:process id="Process_ApproveExpense" isExecutable="true">
     <bpmn:startEvent id="Start" name="Submit Expense"/>
-    <bpmn:task id="Task_CheckPolicy" name="Check Approval Policy"/>
+
+    <bpmn:serviceTask id="Task_CheckPolicy"
+                      name="Check Approval Policy"
+                      uapf:algorithmCardRef="algo.expense_approval.policy_lookup_assistant">
+      <bpmn:ioSpecification>
+        <bpmn:dataInput  id="Task_CheckPolicy_in_expense_category"
+                         name="expense_category : string"/>
+        <bpmn:dataInput  id="Task_CheckPolicy_in_expense_amount"
+                         name="expense_amount : decimal"/>
+        <bpmn:dataOutput id="Task_CheckPolicy_out_applicable_policy_text"
+                         name="applicable_policy_text : string"/>
+        <bpmn:dataOutput id="Task_CheckPolicy_out_policy_section_ref"
+                         name="policy_section_ref : string"/>
+        <bpmn:inputSet>
+          <bpmn:dataInputRefs>Task_CheckPolicy_in_expense_category</bpmn:dataInputRefs>
+          <bpmn:dataInputRefs>Task_CheckPolicy_in_expense_amount</bpmn:dataInputRefs>
+        </bpmn:inputSet>
+        <bpmn:outputSet>
+          <bpmn:dataOutputRefs>Task_CheckPolicy_out_applicable_policy_text</bpmn:dataOutputRefs>
+          <bpmn:dataOutputRefs>Task_CheckPolicy_out_policy_section_ref</bpmn:dataOutputRefs>
+        </bpmn:outputSet>
+      </bpmn:ioSpecification>
+    </bpmn:serviceTask>
+
     <bpmn:exclusiveGateway id="Gateway_Approved" name="Approved?"/>
     <bpmn:task id="Task_Approve" name="Approve Expense"/>
     <bpmn:task id="Task_Reject" name="Reject Expense"/>

@@ -1,5 +1,71 @@
 # Changelog
 
+## [2.4.0] - 2026-05-20
+
+### Changed (breaking — but no production deployments affected, see Note below)
+- The integration point for Algorithm Cards has moved. v2.3.0 placed
+  `algorithm_card` on the resource target in `resources/mappings.yaml`.
+  v2.4.0 places `uapf:algorithmCardRef` on the BPMN task itself.
+  This reversal is deliberate: when the card lives on the resource
+  target the algorithm becomes invisible at the BPMN diagram level,
+  defeating the purpose of having a process notation. The algorithm
+  card belongs on the task because the task IS the invocation of the
+  algorithm.
+
+### Added
+- New BPMN extension namespace `https://uapf.dev/bpmn/v2.4` and
+  attribute `uapf:algorithmCardRef` valid on `bpmn:serviceTask`,
+  `bpmn:businessRuleTask`, and `bpmn:task`. Value MUST be a Card id
+  matching `^algo\.[a-z0-9][a-z0-9._-]+$`.
+- New `schemas/bpmn-extension.schema.json` defining the extension
+  attribute formally.
+- New chapter 13.9 (BPMN IO specification from the Card) — a card-
+  referencing task SHOULD also carry a synthesized
+  `<bpmn:ioSpecification>` block so downstream gateways branching on
+  algorithm outputs are visually traceable.
+- New chapter 13.10 (visual rendering — informative) — defines the
+  recommended visual treatment: custom algorithm icon, card identity
+  line, metadata line, risk-class dot, and data-object IO. This is
+  what makes the diagram self-explanatory: anyone reading the BPMN
+  can see which algorithm fires at each step, what risk class it
+  carries, and which outputs feed the next gateway.
+- New validation rule `SEM-013` (ERROR, advisory): the BPMN
+  `<bpmn:ioSpecification>` on a card-referencing task SHOULD match
+  the Card's `io` block.
+
+### Removed (breaking)
+- `target.algorithm_card` is removed from `schemas/resource-mapping.schema.json`.
+  Resource targets describe *where* a task is dispatched — they do
+  not declare algorithm identity. The card belongs on the task, not
+  on the dispatch endpoint.
+
+### Changed
+- Validation rule `SEM-012` reworded: the rule now governs BPMN
+  attribute resolution (`uapf:algorithmCardRef` -> `algorithms/`)
+  rather than resource-target attribute resolution.
+- `specification/02-process-cornerstones.md` extension note updated.
+- `specification/10-conformance-checklist.md` updated to require
+  recognition of the BPMN namespace and the new validation rules.
+- `examples/approve-expense-l4`: the BPMN file gains
+  `xmlns:uapf` + `uapf:algorithmCardRef` on the appropriate
+  serviceTask plus a synthesized `<bpmn:ioSpecification>`. The
+  corresponding `algorithm_card` is removed from
+  `resources/mappings.yaml`. Archive re-packed.
+
+### Note
+- This is a deliberate reversal of a decision made in v2.3.0.
+  v2.3.0 was published and merged earlier on the same day as this
+  release; the dependent ecosystem at the time of revision was a
+  single in-flight implementation package
+  (`dokumenta-semantiska-analize` v3.0.0) which is being updated to
+  v3.1.0 in lockstep. No widely-deployed code depended on
+  `target.algorithm_card`, so the field is removed rather than
+  deprecated. Future external implementations that adopted v2.3.0
+  should migrate by moving the `algorithm_card` value from each
+  resource target to the corresponding BPMN task as
+  `uapf:algorithmCardRef`, and optionally adding a
+  `<bpmn:ioSpecification>` synthesized from the Card.
+
 ## [2.3.0] - 2026-05-20
 
 ### Added
