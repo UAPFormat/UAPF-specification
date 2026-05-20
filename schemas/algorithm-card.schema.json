@@ -1,0 +1,178 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uapf.dev/schemas/algorithm-card.schema.json",
+  "title": "UAPF Algorithm Card Schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["kind", "id", "version", "name", "intent", "algorithm_kind", "io", "implementation", "owners", "lifecycle"],
+  "properties": {
+    "kind": { "const": "uapf.algorithm.card" },
+    "id": {
+      "type": "string",
+      "pattern": "^algo\\.[a-z0-9][a-z0-9._-]+$"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$"
+    },
+    "name": { "type": "string", "minLength": 1 },
+    "intent": { "type": "string", "minLength": 20 },
+    "algorithm_kind": {
+      "type": "string",
+      "enum": ["formula", "classifier", "extractor", "ml_model", "rule_table", "crypto", "redactor", "router", "validator", "aggregator", "transformer", "emitter", "other"]
+    },
+    "io": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["inputs", "outputs"],
+      "properties": {
+        "inputs":  { "type": "array", "items": { "$ref": "#/$defs/io_field" } },
+        "outputs": { "type": "array", "items": { "$ref": "#/$defs/io_field" } }
+      }
+    },
+    "implementation": {
+      "oneOf": [
+        { "$ref": "#/$defs/impl_inline" },
+        { "$ref": "#/$defs/impl_external" },
+        { "$ref": "#/$defs/impl_composite" }
+      ]
+    },
+    "owners": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/owner_ref" }
+    },
+    "lifecycle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status"],
+      "properties": {
+        "status": { "enum": ["draft", "review", "approved", "deprecated", "retired"] },
+        "since":  { "type": "string", "format": "date" }
+      }
+    },
+    "determinism": { "enum": ["deterministic", "stochastic", "learned"] },
+    "confidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "type": { "enum": ["none", "probability", "score", "categorical"] },
+        "threshold": { "type": "number", "minimum": 0, "maximum": 1 },
+        "below_threshold": { "type": "string" }
+      }
+    },
+    "side_effects": { "enum": ["pure", "reads_state", "writes_state", "external_call"] },
+    "complexity": { "type": "object" },
+    "failure_mode": { "type": "string" },
+    "limitations": { "type": "array", "items": { "type": "string" } },
+    "reference": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "legal":       { "type": "string" },
+        "methodology": { "type": "string" },
+        "standard":    { "type": "string" },
+        "url":         { "type": "string", "format": "uri" }
+      }
+    },
+    "validation": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "last_validated": { "type": "string", "format": "date" },
+        "test_suite":     { "type": "string" },
+        "validator":      { "type": "string" },
+        "methodology":    { "type": "string" },
+        "metrics":        { "type": "object", "additionalProperties": { "type": "number" } }
+      }
+    },
+    "audit": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "log_inputs":  { "enum": ["none", "redacted", "full"] },
+        "log_outputs": { "enum": ["none", "redacted", "full"] },
+        "retention":   { "type": "string", "pattern": "^[0-9]+[ymdh]$" }
+      }
+    },
+    "ml":      { "type": "object" },
+    "crypto":  { "type": "object" },
+    "privacy": { "type": "object" },
+    "risk":    { "type": "object" },
+    "prompt":  { "type": "object" }
+  },
+  "$defs": {
+    "io_field": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "type"],
+      "properties": {
+        "id":            { "type": "string", "pattern": "^[a-z_][a-z0-9_]*$" },
+        "type":          { "enum": ["string", "integer", "decimal", "boolean", "date", "datetime", "object", "array", "binary", "stream", "probability"] },
+        "schema":        { "type": "string" },
+        "unit":          { "type": "string" },
+        "cardinality":   { "enum": ["single", "optional", "array", "stream"] },
+        "constraints":   { "type": "object" },
+        "documentation": { "type": "string" }
+      }
+    },
+    "impl_inline": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "language"],
+      "properties": {
+        "type":     { "const": "inline" },
+        "language": { "enum": ["feel", "dmn", "rego", "regex", "sql", "wasm"] },
+        "body":     { "type": "string" },
+        "body_ref": { "type": "string" }
+      },
+      "oneOf": [
+        { "required": ["body"] },
+        { "required": ["body_ref"] }
+      ]
+    },
+    "impl_external": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "medium", "uri", "hash"],
+      "properties": {
+        "type":    { "const": "external" },
+        "medium":  { "enum": ["llm_prompt", "ml_model", "http_api", "mcp_tool", "native_binary", "crypto_module", "vendor_saas"] },
+        "uri":     { "type": "string" },
+        "hash":    { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+        "runtime": { "type": "object" }
+      }
+    },
+    "impl_composite": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "composed_of"],
+      "properties": {
+        "type": { "const": "composite" },
+        "composed_of": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["ref", "version"],
+            "properties": {
+              "ref":     { "type": "string", "pattern": "^algo\\." },
+              "version": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "owner_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "id"],
+      "properties": {
+        "type":    { "enum": ["team", "person", "role"] },
+        "id":      { "type": "string", "minLength": 1 },
+        "contact": { "type": "string" }
+      }
+    }
+  }
+}

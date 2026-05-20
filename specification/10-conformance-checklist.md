@@ -71,4 +71,16 @@ An implementation claiming UAPF conformance MUST satisfy the following.
 - [ ] Validates version fields are strings, not numbers
 - [ ] Rejects invalid type coercions in required fields
 
+
+## Algorithm Cards (13) — OPTIONAL
+
+If an implementation supports Algorithm Cards:
+
+- [ ] Recognizes `algorithm_cards: true` and `paths.algorithms` in the manifest
+- [ ] Validates each `*.card.yaml` against `schemas/algorithm-card.schema.json`
+- [ ] Resolves `target.algorithm_card` references during workspace validation (SEM-012)
+- [ ] Exposes Cards via MCP under `uapf://algorithms/...` when MCP export is enabled
+- [ ] Includes Card reference in `uapf.resolve_resources` output when target carries one
+- [ ] Ignores Card extension blocks (`ml`, `crypto`, `privacy`, `risk`, `prompt`) it does not understand without raising errors
+
 An implementation MUST state which sections it supports.

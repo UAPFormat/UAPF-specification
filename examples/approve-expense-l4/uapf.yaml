@@ -16,6 +16,8 @@ paths:
   cmmn: cmmn
   resources: resources
   metadata: metadata
+  algorithms: algorithms
+algorithm_cards: true
 owners:
   - type: team
     id: finance-process-office

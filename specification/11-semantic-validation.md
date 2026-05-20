@@ -91,6 +91,22 @@ FOR EACH file IN dmn/*.dmn:
     ASSERT file CONTAINS <dmndi:DMNDI>
 ```
 
+
+### 11.3.4 Algorithm Card Reference Integrity
+
+When a resource target carries an `algorithm_card` property, the
+referenced Card MUST resolve.
+
+**Validation Rule SEM-012:**
+```
+FOR EACH target IN resources/mappings.yaml:
+  IF target.algorithm_card IS PRESENT:
+    IF target.algorithm_card MATCHES /^algo\./:
+      ASSERT target.algorithm_card EXISTS as id IN any algorithms/*.card.yaml
+    ELSE:
+      ASSERT target.algorithm_card EXISTS as path RELATIVE TO package root
+```
+
 ## 11.4 Error Codes
 
 | Code | Severity | Description |
@@ -106,9 +122,10 @@ FOR EACH file IN dmn/*.dmn:
 | SEM-009 | ERROR | Duplicate binding for same source |
 | SEM-010 | WARNING | Fallback target not defined |
 | SEM-011 | ERROR | Cornerstone file missing diagram interchange (DI) |
+| SEM-012 | ERROR | Algorithm Card reference does not resolve |
 
 ## 11.5 Conformance
 
-- Implementations MUST validate SEM-001 through SEM-003, SEM-007 through SEM-009, and SEM-011
+- Implementations MUST validate SEM-001 through SEM-003, SEM-007 through SEM-009, SEM-011, and SEM-012
 - Implementations SHOULD validate SEM-004 through SEM-006 and SEM-010
 - Implementations MUST report error codes with messages

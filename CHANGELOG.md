@@ -1,5 +1,35 @@
 # Changelog
 
+## [2.3.0] - 2026-05-20
+
+### Added
+- New OPTIONAL artifact category — Algorithm Cards — defined in
+  `specification/13-algorithm-cards.md` and validated by
+  `schemas/algorithm-card.schema.json`. A Card is a typed, versioned
+  governance wrapper for a single algorithm invoked behind a resource
+  target. Cards live in the package's `algorithms/` folder (path
+  configurable via `paths.algorithms`) and supply intent, IO contract,
+  ownership, lifecycle, validation history, and OPTIONAL extensions
+  for ML, crypto, privacy, risk, and prompt-based implementations.
+- Manifest schema gains two OPTIONAL top-level properties:
+  `algorithm_cards` (boolean) and `paths.algorithms` (string). Neither
+  is required; both live outside the closed `cornerstones` block.
+- Resource mapping schema gains one OPTIONAL `algorithm_card` property
+  per target, referencing a Card by `id` or relative path.
+- New validation rule `SEM-012` (ERROR): Algorithm Card reference does
+  not resolve.
+- New OPTIONAL conformance block in `10-conformance-checklist.md` for
+  implementations that support Algorithm Cards.
+- New example `examples/approve-expense-l4` now demonstrates a Card
+  attached to one of its resource targets.
+
+### Note
+- Fully additive, backward-compatible. Every package valid under 2.2.x
+  remains valid under 2.3.0. Algorithm Cards extend the Resources
+  cornerstone — they do NOT become a fifth cornerstone. The four
+  cornerstones (BPMN, DMN, CMMN, Resources + Mapping) remain
+  authoritative and unchanged. Hence a minor bump.
+
 ## [2.2.0] - 2026-05-17
 
 ### Added
