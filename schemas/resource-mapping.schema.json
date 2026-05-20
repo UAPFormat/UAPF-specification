@@ -49,10 +49,6 @@
             "schedule": { "type": "string", "description": "Cron expression or 'always'" },
             "timezone": { "type": "string", "default": "UTC" }
           }
-        },
-        "algorithm_card": {
-          "type": "string",
-          "description": "Reference to an Algorithm Card describing this target. Either the Card's id (algo.<scope>.<name>) or a relative path to the .card.yaml file (see chapter 13)."
         }
       }
     },

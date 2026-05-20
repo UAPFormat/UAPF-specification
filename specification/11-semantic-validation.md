@@ -94,18 +94,35 @@ FOR EACH file IN dmn/*.dmn:
 
 ### 11.3.4 Algorithm Card Reference Integrity
 
-When a resource target carries an `algorithm_card` property, the
+When a BPMN task carries a `uapf:algorithmCardRef` attribute, the
 referenced Card MUST resolve.
 
 **Validation Rule SEM-012:**
 ```
-FOR EACH target IN resources/mappings.yaml:
-  IF target.algorithm_card IS PRESENT:
-    IF target.algorithm_card MATCHES /^algo\./:
-      ASSERT target.algorithm_card EXISTS as id IN any algorithms/*.card.yaml
-    ELSE:
-      ASSERT target.algorithm_card EXISTS as path RELATIVE TO package root
+FOR EACH bpmn:serviceTask | bpmn:businessRuleTask | bpmn:task IN cornerstones/bpmn/*:
+  IF task HAS attribute uapf:algorithmCardRef:
+    ASSERT uapf:algorithmCardRef MATCHES /^algo\.[a-z0-9][a-z0-9._-]+$/
+    ASSERT uapf:algorithmCardRef EXISTS as id IN any algorithms/*.card.yaml
 ```
+
+### 11.3.5 BPMN IO Specification Matches Card IO
+
+When a BPMN task carries `uapf:algorithmCardRef` AND a
+`<bpmn:ioSpecification>` is present, the IO specification SHOULD
+match the referenced Card's `io` block.
+
+**Validation Rule SEM-013:**
+```
+FOR EACH task WITH uapf:algorithmCardRef AND <bpmn:ioSpecification>:
+  card = LOAD algorithms/{algorithmCardRef}.card.yaml
+  FOR EACH dataInput IN ioSpecification:
+    ASSERT EXISTS matching card.io.inputs[].id
+  FOR EACH dataOutput IN ioSpecification:
+    ASSERT EXISTS matching card.io.outputs[].id
+```
+
+SEM-013 is an advisory error — auto-fixable by regenerating the IO
+specification from the Card.
 
 ## 11.4 Error Codes
 
@@ -122,10 +139,11 @@ FOR EACH target IN resources/mappings.yaml:
 | SEM-009 | ERROR | Duplicate binding for same source |
 | SEM-010 | WARNING | Fallback target not defined |
 | SEM-011 | ERROR | Cornerstone file missing diagram interchange (DI) |
-| SEM-012 | ERROR | Algorithm Card reference does not resolve |
+| SEM-012 | ERROR | Algorithm Card reference (uapf:algorithmCardRef) does not resolve |
+| SEM-013 | ERROR | BPMN ioSpecification does not match referenced Card's io block |
 
 ## 11.5 Conformance
 
-- Implementations MUST validate SEM-001 through SEM-003, SEM-007 through SEM-009, SEM-011, and SEM-012
+- Implementations MUST validate SEM-001 through SEM-003, SEM-007 through SEM-009, SEM-011, SEM-012, and SEM-013
 - Implementations SHOULD validate SEM-004 through SEM-006 and SEM-010
 - Implementations MUST report error codes with messages

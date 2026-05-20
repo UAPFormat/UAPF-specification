@@ -6,7 +6,6 @@ targets:
     capabilities:
       - capability.policy.lookup
       - capability.decision.assist
-    algorithm_card: algo.expense_approval.policy_lookup_assistant
 
   - id: role.manager
     type: human_role

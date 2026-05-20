@@ -37,8 +37,9 @@ UAPF does not redefine BPMN/DMN/CMMN semantics; it packages them with governance
 
 ### Algorithm Cards (extension)
 
-Resource targets MAY carry deeper governance metadata via Algorithm
-Cards (see chapter 13). Algorithm Cards extend, but do not constitute,
-the Resources cornerstone. The four cornerstones remain BPMN, DMN,
-CMMN, and Resources + Mapping.
+BPMN tasks MAY declare the algorithm they invoke via the
+`uapf:algorithmCardRef` attribute, with the referenced Card stored
+under the package's `algorithms/` folder (see chapter 13). Algorithm
+Cards extend, but do not constitute, the BPMN cornerstone. The four
+cornerstones remain BPMN, DMN, CMMN, and Resources + Mapping.
 

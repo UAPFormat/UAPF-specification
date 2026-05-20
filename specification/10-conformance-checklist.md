@@ -78,9 +78,11 @@ If an implementation supports Algorithm Cards:
 
 - [ ] Recognizes `algorithm_cards: true` and `paths.algorithms` in the manifest
 - [ ] Validates each `*.card.yaml` against `schemas/algorithm-card.schema.json`
-- [ ] Resolves `target.algorithm_card` references during workspace validation (SEM-012)
+- [ ] Resolves `uapf:algorithmCardRef` references on BPMN tasks during workspace validation (SEM-012)
+- [ ] Recognises the `xmlns:uapf="https://uapf.dev/bpmn/v2.4"` namespace on `<bpmn:definitions>`
+- [ ] Validates that a BPMN `<bpmn:ioSpecification>` on a card-referencing task matches the Card's `io` block (SEM-013)
 - [ ] Exposes Cards via MCP under `uapf://algorithms/...` when MCP export is enabled
-- [ ] Includes Card reference in `uapf.resolve_resources` output when target carries one
 - [ ] Ignores Card extension blocks (`ml`, `crypto`, `privacy`, `risk`, `prompt`) it does not understand without raising errors
+- [ ] Renderers SHOULD overlay the algorithm icon, Card id, and risk-class indicator per chapter 13.10 (informative)
 
 An implementation MUST state which sections it supports.
