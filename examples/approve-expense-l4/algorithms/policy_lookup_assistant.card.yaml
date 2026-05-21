@@ -43,11 +43,28 @@ lifecycle:
   since: "2026-05-20"
 
 validation:
-  last_validated: "2026-05-20"
-  test_suite: ../tests/algorithms/policy_lookup_assistant.test.yaml
+  last_validated: "2026-05-21"
   validator: finance-process-office
 
 audit:
   log_inputs: redacted
   log_outputs: full
   retention: "1y"
+tests:
+  - name: "low-value travel expense (single approver)"
+    description: "Travel expense well under threshold — returns single-approver policy."
+    inputs:
+      expense_category: "travel.taxi"
+      expense_amount: 45.00
+    expected_outputs:
+      applicable_policy_text: "Single-approver path for travel.taxi expenses up to EUR 100."
+      policy_section_ref: "POL-FIN-TRAVEL-04.2"
+
+  - name: "high-value capex (board approval)"
+    description: "Large capital expense — returns board-approval policy."
+    inputs:
+      expense_category: "capex.equipment"
+      expense_amount: 25000.00
+    expected_outputs:
+      applicable_policy_text: "Capital expenditures over EUR 10000 require board approval per POL-FIN-CAPEX-02."
+      policy_section_ref: "POL-FIN-CAPEX-02"

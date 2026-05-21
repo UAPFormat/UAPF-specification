@@ -78,6 +78,9 @@ If an implementation supports Algorithm Cards:
 
 - [ ] Recognizes `algorithm_cards: true` and `paths.algorithms` in the manifest
 - [ ] Validates each `*.card.yaml` against `schemas/algorithm-card.schema.json`
+- [ ] Enforces embedded tests minimum (SEM-014: tests array MUST have ≥2 entries) (v2.5.0+)
+- [ ] Surfaces test key-mismatch warnings (SEM-015) when test inputs/outputs reference unknown io ids (v2.5.0+)
+- [ ] Does NOT load tests from `tests/algorithms/<card-id>.test.yaml` sidecar files for algorithm cards (the location was removed in v2.5.0 — sidecar tests remain valid for BPMN/DMN/CMMN)
 - [ ] Resolves `uapf:algorithmCardRef` references on BPMN tasks during workspace validation (SEM-012)
 - [ ] Recognises the `xmlns:uapf="https://uapf.dev/bpmn/v2.4"` namespace on `<bpmn:definitions>`
 - [ ] Validates that a BPMN `<bpmn:ioSpecification>` on a card-referencing task matches the Card's `io` block (SEM-013)
