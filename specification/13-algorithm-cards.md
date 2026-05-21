@@ -281,8 +281,6 @@ attribute is namespaced and ignored by conformant BPMN tooling.
 
 ## 13.11 Manifest declaration
 
-(unchanged from prior text — kept here for reading flow.)
-
 A package containing Algorithm Cards SHOULD declare:
 
 ```yaml
@@ -291,15 +289,64 @@ paths:
   algorithms: algorithms
 ```
 
-## 13.12 Testing
+## 13.12 Testing (embedded; v2.5.0+)
 
-Per-Card tests SHOULD be stored under
-`tests/algorithms/<card-id>.test.yaml`.
+**Breaking change in v2.5.0.** Per-Card tests MUST now be embedded
+directly in the Card under the top-level `tests` array. The previous
+sidecar location `tests/algorithms/<card-id>.test.yaml` is **removed**
+as a valid location for algorithm card tests. (Sidecar tests under
+`tests/` remain valid for BPMN, DMN, and CMMN cornerstones — only
+algorithm cards are affected by this change.)
 
-Tests carry a uniform shape regardless of Card `algorithm_kind` or
-`implementation.type`: input cases, expected outputs, and a tolerance
-declaration. A passing test run is the operational definition of
-validation.
+A Card MUST declare at least two test cases. The Algorithm Card
+viewer (chapter 13.16) renders these as the primary interaction
+surface, so two is a viewer-driven minimum, not an arbitrary count;
+single-case test corpora hide failure modes and produce sample
+browsers with only one row.
+
+Each entry has a uniform shape regardless of `algorithm_kind` or
+`implementation.type`:
+
+```yaml
+tests:
+  - name: "Latvian personas kods in plain text"
+    description: "Standard 11-digit personal ID code with hyphen"
+    inputs:
+      content: "Personas kods: 010101-12345 saskaņā ar likumu."
+    expected_outputs:
+      redacted_content: "Personas kods: [REDACTED] saskaņā ar likumu."
+      personas_koda_present: true
+      detected_entity_types: ["PERSONAS_KODS"]
+    tolerance:                   # optional, for stochastic outputs
+      ai_confidence_score: 0.05
+
+  - name: "no PII present"
+    inputs:
+      content: "Vakar bija saulains laiks."
+    expected_outputs:
+      redacted_content: "Vakar bija saulains laiks."
+      personas_koda_present: false
+      detected_entity_types: []
+```
+
+Fields:
+
+* `name` (REQUIRED) — short label, used as the tab/row label in the viewer.
+* `description` (OPTIONAL) — longer explanation; shown on expand.
+* `inputs` (REQUIRED) — concrete values keyed by `io.inputs[].id`.
+  The viewer's sample browser matches user-entered values against
+  these by exact string equality (per SEM-015 the keys SHOULD match
+  the Card's declared input ids).
+* `expected_outputs` (REQUIRED) — expected values keyed by
+  `io.outputs[].id`. For deterministic cards this is a hard assertion;
+  for stochastic cards, see `tolerance`.
+* `tolerance` (OPTIONAL) — per-output absolute delta for stochastic
+  outputs. Numeric values mean ±delta; test runners that do not
+  implement tolerance MAY skip those assertions but MUST still load
+  the case.
+
+A passing test run is the operational definition of validation
+(unchanged from v2.4.0).
 
 ## 13.13 Cards in MCP export
 
@@ -313,3 +360,70 @@ in the resolved binding when a target's task carries one.
 ## 13.14 Conformance
 
 See chapter 10 for the Algorithm Cards conformance section.
+
+## 13.15 Migration guide from v2.4.0
+
+Existing v2.4.0 packages with sidecar tests under
+`tests/algorithms/<card-id>.test.yaml` MUST migrate to embedded
+tests when upgrading to v2.5.0. Mechanical migration:
+
+1. For each `algorithms/<id>.card.yaml`, find any
+   `tests/algorithms/<id>.test.yaml` sidecar.
+2. Copy each sidecar test case under the Card's new top-level
+   `tests:` array. Field names map 1:1 (`inputs`, `expected_outputs`,
+   `tolerance`).
+3. Delete the sidecar `.test.yaml` file.
+4. If the resulting `tests:` array has fewer than two entries, the
+   author MUST add at least one more case (e.g. a negative or
+   edge-case input). SEM-014 will fail otherwise.
+
+The migration is mechanical for the data shape but requires editorial
+judgment when fewer than two cases exist. The viewer minimum of two
+is intentional — see 13.12.
+
+## 13.16 Algorithm Card viewer (informative; v2.5.0+)
+
+This subsection is INFORMATIVE — it does not mandate viewer
+behaviour, but defines the recommended viewer contract so multiple
+implementations stay consistent. A conforming viewer renders an
+algorithm card as the Preview tab on `*.card.yaml` files, alongside
+the host's existing Edit File and View Source tabs.
+
+The Preview tab is polymorphic on `implementation.type` plus the
+relevant sub-field (`impl_inline.language` or `impl_external.medium`).
+All Preview renderings share a common header (card metadata strip,
+IO contract panel, risk-class dot per chapter 13.10) and a common
+footer (sample browser driven by the embedded `tests` array). The
+middle section varies by implementation type:
+
+* `implementation.type: external` — the card is a black box. The
+  viewer renders the IO contract and a **sample browser**: the user
+  edits input values, the viewer matches by exact string equality
+  against `tests[].inputs`, and on match displays the corresponding
+  `expected_outputs`. On no match, the viewer displays the recorded
+  samples as a curated dropdown without claiming to predict the
+  output of arbitrary inputs.
+* `implementation.type: inline` — the card carries its logic
+  literally. The viewer renders the source per `impl_inline.language`:
+  * `regex` — pattern shown; sample text from `tests[].inputs`
+    interactively highlights matches.
+  * `feel` — expression shown; user-editable input fields evaluate
+    the expression client-side; result displayed live.
+  * `dmn` — link out to the corresponding `dmn/<id>.dmn` cornerstone
+    file rather than re-rendering it in the algorithm viewer
+    (DMN has its own cornerstone visualiser).
+  * `rego`, `sql`, `wasm` — syntax-highlighted source with the
+    sample browser; live evaluation is implementation-defined.
+* `implementation.type: composite` — call-tree graph of the
+  composed Card references, each node clickable to navigate into
+  that Card's viewer.
+
+The risk-class dot uses the same derivation as chapter 13.10
+(green for deterministic / minimal-risk, amber for stochastic or
+limited-risk-with-oversight, red for high-risk or
+mandatory-oversight). The dot appears in the metadata strip.
+
+Click-through from the BPMN diagram's algorithm task overlay
+(chapter 13.10) SHOULD open the Algorithm Card viewer as a
+side-panel drawer over the BPMN, preserving process context rather
+than navigating away.

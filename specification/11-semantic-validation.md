@@ -124,6 +124,49 @@ FOR EACH task WITH uapf:algorithmCardRef AND <bpmn:ioSpecification>:
 SEM-013 is an advisory error — auto-fixable by regenerating the IO
 specification from the Card.
 
+### 11.3.6 Algorithm Card Embedded Tests (v2.5.0+)
+
+Every algorithm card MUST carry at least two embedded test cases
+under its top-level `tests` array (see chapter 13.12).
+
+**Validation Rule SEM-014:**
+```
+FOR EACH card IN algorithms/*.card.yaml:
+  ASSERT card.tests IS PRESENT
+  ASSERT card.tests IS array
+  ASSERT card.tests.length >= 2
+```
+
+SEM-014 is an ERROR. v2.4.0 cards that pass schema validation but
+fail SEM-014 are non-conformant in v2.5.0+ and MUST be migrated per
+the chapter 13.15 migration guide before upgrading.
+
+### 11.3.7 Algorithm Card Test Key Resolution
+
+The keys used in `tests[].inputs` and `tests[].expected_outputs`
+SHOULD match the Card's declared `io.inputs[].id` and
+`io.outputs[].id` respectively. Misaligned keys produce viewer
+behaviour that looks like silent test passes (the viewer cannot
+match user-entered inputs against test cases that don't share input
+keys).
+
+**Validation Rule SEM-015:**
+```
+FOR EACH card IN algorithms/*.card.yaml:
+  declared_input_ids = SET(card.io.inputs[].id)
+  declared_output_ids = SET(card.io.outputs[].id)
+  FOR EACH test IN card.tests:
+    FOR EACH input_key IN test.inputs:
+      WARN IF input_key NOT IN declared_input_ids
+    FOR EACH output_key IN test.expected_outputs:
+      WARN IF output_key NOT IN declared_output_ids
+```
+
+SEM-015 is an ADVISORY warning (level: warn). It does not block
+conformance, but it surfaces a class of footgun where a Card author
+adds a new IO field but forgets to update existing test cases (or
+vice versa).
+
 ## 11.4 Error Codes
 
 | Code | Severity | Description |
@@ -141,9 +184,11 @@ specification from the Card.
 | SEM-011 | ERROR | Cornerstone file missing diagram interchange (DI) |
 | SEM-012 | ERROR | Algorithm Card reference (uapf:algorithmCardRef) does not resolve |
 | SEM-013 | ERROR | BPMN ioSpecification does not match referenced Card's io block |
+| SEM-014 | ERROR | Algorithm card lacks embedded tests array, or has fewer than 2 entries (v2.5.0+) |
+| SEM-015 | WARN  | Algorithm card test input/output keys do not match declared io.inputs/io.outputs ids (v2.5.0+) |
 
 ## 11.5 Conformance
 
-- Implementations MUST validate SEM-001 through SEM-003, SEM-007 through SEM-009, SEM-011, SEM-012, and SEM-013
+- Implementations MUST validate SEM-001 through SEM-003, SEM-007 through SEM-009, SEM-011, SEM-012, SEM-013, SEM-014, and SEM-015
 - Implementations SHOULD validate SEM-004 through SEM-006 and SEM-010
 - Implementations MUST report error codes with messages

@@ -1,5 +1,57 @@
 # Changelog
 
+## [2.5.0] - 2026-05-21
+
+### Removed (breaking)
+- The sidecar location `tests/algorithms/<card-id>.test.yaml` is
+  REMOVED as a valid location for algorithm card tests. Conforming
+  implementations MUST NOT load algorithm card tests from this
+  location. (Sidecar tests under `tests/` remain valid for BPMN,
+  DMN, and CMMN cornerstones — only algorithm cards are affected.)
+
+### Added (breaking)
+- A new REQUIRED top-level `tests` array on every algorithm card
+  (`algorithm-card.schema.json`). The array MUST contain at least
+  two entries (`minItems: 2`). Each entry has the shape
+  `{ name, description?, inputs, expected_outputs, tolerance? }`.
+  The viewer minimum of two is intentional: a single-case sample
+  browser hides failure modes.
+- New validation rule SEM-014 (ERROR): every algorithm card MUST
+  carry the embedded `tests` array with at least two entries.
+- New validation rule SEM-015 (WARN): test `inputs.*` and
+  `expected_outputs.*` keys SHOULD match the Card's declared
+  `io.inputs[].id` and `io.outputs[].id` respectively. Misaligned
+  keys are a known footgun (the sample browser can't match against
+  test cases whose input keys don't align with the IO contract).
+- New chapter 13.15 (Migration guide from v2.4.0) — mechanical
+  steps for moving sidecar tests into the Card.
+- New chapter 13.16 (informative — Algorithm Card viewer) — defines
+  the recommended Preview-tab viewer contract: polymorphic
+  rendering on `implementation.type`, common metadata + IO header
+  and sample-browser footer, per-language inline visualisers
+  (regex highlight, FEEL evaluator, dmn link-out to cornerstone),
+  external "sample browser" with string-equality matching against
+  embedded tests, composite call-tree. Risk-class dot derivation
+  matches chapter 13.10. Click-through from a BPMN algorithm task
+  overlay opens the viewer as a side-panel drawer over the BPMN.
+
+### Changed
+- Chapter 13.12 (Testing) rewritten: tests are embedded, not sidecar.
+- Chapter 13.11 (Manifest declaration) lost its "(unchanged from
+  prior text — kept here for reading flow.)" note; promoted to a
+  first-class section.
+- `specification/10-conformance-checklist.md` extended with three
+  new bullets covering SEM-014, SEM-015, and the sidecar removal.
+
+### Migration notes
+- v2.4.0 packages MUST migrate per chapter 13.15 before upgrading
+  to v2.5.0. The migration is mechanical for the data shape but
+  requires editorial judgment when fewer than two cases exist —
+  the author MUST add at least one more case before SEM-014 will
+  pass. UAPFormat/dokumenta-semantiska-analize ships its own v3.2.0
+  with embedded tests in lockstep with this release; treat it as
+  the reference migration.
+
 ## [2.4.0] - 2026-05-20
 
 ### Changed (breaking — but no production deployments affected, see Note below)
