@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uapf.dev/schemas/uapf-mcp-binding.schema.json",
+  "title": "UAPF MCP Execution Binding",
+  "description": "The per-package MCP execution binding, declared under exposure.mcp in a UAPF package manifest (uapf.yaml). It controls how a package's runnable processes and decisions are surfaced as MCP tools by a conforming UAPF->MCP implementation (e.g. the reference uapf-mcp / uapf-mcp-go server in front of a UAPF engine, or the ProcessGit /{owner}/{repo}/uapf-mcp scope). All fields are OPTIONAL and backward compatible: an absent binding means the implementation exposes its default execution tool surface for every runnable entrypoint. This schema mirrors the exposure.mcp object embedded in uapf-manifest.schema.json and exists so the binding can be referenced on its own.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "enabled": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether this package is exposed over MCP at all."
+    },
+    "runnable": {
+      "type": "boolean",
+      "description": "Whether the package exposes runnable (execution) entrypoints over MCP, not only read/knowledge tools."
+    },
+    "exposedEntrypoints": {
+      "type": "array",
+      "description": "Filter + naming for the runnable surface. Each item is either a bare process/decision id, or an object mapping a process or decision to an explicit MCP tool name. Omit the field to expose all runnable entrypoints under the implementation's default tool names (see chapter 06).",
+      "items": {
+        "oneOf": [
+          { "type": "string", "minLength": 1 },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["tool"],
+            "properties": {
+              "tool": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Explicit MCP tool name exposed for this entrypoint (overrides the implementation default such as uapf.run_process / uapf.evaluate_decision)."
+              },
+              "process": {
+                "type": "string",
+                "description": "BPMN process id this tool runs (evaluated via the run-process / start-session surface)."
+              },
+              "decision": {
+                "type": "string",
+                "description": "DMN decision id this tool evaluates (via the evaluate-decision surface). Deterministic; not interpreted by the agent."
+              }
+            }
+          }
+        ]
+      }
+    },
+    "exposedArtifacts": {
+      "type": "array",
+      "description": "Which package artifacts are retrievable via the get-artifact surface.",
+      "items": { "enum": ["manifest", "bpmn", "dmn", "cmmn", "docs", "tests"] }
+    }
+  }
+}

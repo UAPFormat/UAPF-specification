@@ -1,5 +1,17 @@
 # Changelog
 
+
+## [Unreleased]
+
+### Added
+- `schemas/uapf-mcp-binding.schema.json`: standalone schema for the per-package
+  MCP **execution** binding (`exposure.mcp`), mirroring the definition embedded in
+  `uapf-manifest.schema.json` so the binding can be referenced on its own.
+- `specification/appendix/uapf-mcp-binding.md`: informative appendix explaining how
+  `exposure.mcp` controls the chapter-06 execution tool surface (filter + per-entrypoint
+  tool naming), how capability hosts are resolved, and the reference implementations
+  (uapf-mcp / uapf-mcp-go, and the ProcessGit `/{owner}/{repo}/uapf-mcp` scope).
+
 ## [2.5.0] - 2026-05-21
 
 ### Removed (breaking)
